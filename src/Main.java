@@ -9,14 +9,13 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-
-import java.security.Key;
 
 public class Main extends Application {
 
@@ -36,83 +35,68 @@ public class Main extends Application {
         Button loadTextButton = new Button("Load from Text");
         Label mistakesLabel = new Label("Click to show mistakes:");
         CheckBox mistakesCheck = new CheckBox();
-
         optionsHBox.getChildren().addAll(undoButton, redoButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
 
         // Sets size parameters.
         int gridSize = 6;
-        int boxSize = 100;
+        int tileSize = 100;
 
-        // Creates the pane.
-        GridPane gridPane = new GridPane();
-        gridPane.setPadding(new Insets(10, 10, 10, 10));
-        gridPane.setHgap(1);
-        gridPane.setVgap(1);
-        gridPane.setAlignment(Pos.CENTER);
-
-        Rectangle[][] gridBoxes = new Rectangle[gridSize][gridSize];
-        gridPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize));
+        // Creates the main pane.
+        GridPane mainPane = new GridPane();
+        mainPane.setPadding(new Insets(10, 10, 10, 10));
+        mainPane.setHgap(1);
+        mainPane.setVgap(1);
+        mainPane.setAlignment(Pos.CENTER);
 
         // Creates the grid.
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize));
+
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
-                // Creates a box on the grid.
-                Rectangle gridBox = new Rectangle(boxSize, boxSize);
-
-                // Determines how a box looks.
-                gridBox.setStroke(Color.BLACK);
-                gridBox.setStrokeType(StrokeType.INSIDE);
-                gridBox.setFill(Color.WHITE);
-                gridBox.relocate(x * boxSize, y * boxSize);
-                gridPane.add(gridBox, x, y + 1);
-
-                // Deals with block clicks.
-                gridBoxes[x][y] = gridBox;
-                gridBox.addEventHandler(MouseEvent.MOUSE_CLICKED, new BoxClickHandler(gridBoxes, x, y, gridPane));
+                Tile tile = new Tile(x, y);
+                tile.setPrefSize(tileSize, tileSize);
+                gridPane.add(tile, x, y);
             }
         }
-        gridPane.add(optionsHBox, 0, 0, gridSize, 1);
 
         // Finishes setting up the GUI.
-        Scene scene = new Scene(gridPane);
-
+        mainPane.add(optionsHBox, 0, 0);
+        mainPane.add(gridPane, 0, 1);
+        Scene scene = new Scene(mainPane);
         stage.setScene(scene);
+        stage.setResizable(true);
         stage.show();
+    }
+
+    class Tile extends Pane {
+        private int x;
+        private int y;
+
+        public Tile(int x, int y) {
+            this.x = x;
+            this.y= y;
+
+            this.setStyle("-fx-border-color: black;");
+            this.addEventHandler(MouseEvent.MOUSE_CLICKED, new BoxClickHandler(x, y));
+        }
     }
 
     // Event handler code for clicking a grid box.
     class BoxClickHandler implements EventHandler<MouseEvent> {
-        private Rectangle[][] gridBoxes;
         private int x;
         private int y;
-        private int gridSize;
-        private GridPane gridPane;
 
         // Event handler constructor.
-        public BoxClickHandler(Rectangle[][] gridBoxes, int x, int y, GridPane gridPane) {
-            this.gridBoxes = gridBoxes;
+        public BoxClickHandler(int x, int y) {
             this.x = x;
             this.y = y;
-            this.gridSize = gridBoxes.length;
-            this.gridPane = gridPane;
         }
 
         @Override
         public void handle(MouseEvent event) {
-            // Highlights the currently selected grid box.
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    Rectangle gridBox = gridBoxes[i][j];
-
-                    if (i == x && j == y) {
-                        gridBox.setStroke(Color.RED);
-                        gridBox.setStrokeWidth(2.5);
-                    } else if (gridBox.getStrokeWidth() != 1.0) {
-                        gridBox.setStroke(Color.BLACK);
-                        gridBox.setStrokeWidth(1.0);
-                    }
-                }
-            }
+            System.out.println("Clicked at: " + x + "," + y);
         }
     }
 
