@@ -1,4 +1,7 @@
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 
 // The class for a cage on the grid.
 public class Cage {
@@ -35,20 +38,18 @@ public class Cage {
 
         // Displays the cage requirement.
         Label label = new Label(result + "," + operation);
+        label.setFont(new Font(18));
         firstTile.getChildren().add(1, label);
+        StackPane.setAlignment(firstTile.getChildren().get(1), Pos.TOP_LEFT);
 
-        // Displays the border of the cage.
+        // Adds borders to the sides of tiles not adjacent to the cage.
         for (Tile cageTile : cageTiles) {
-            StringBuilder tileStyle = new StringBuilder("-fx-border-color: black;" +
-                                                        "-fx-border-width: ");
-
-            // Adds borders to the sides of tiles not adjacent to the cage.
-            tileStyle.append(findAdjacent(false, cageTile.getGridPosition() - gridSize));
-            tileStyle.append(findAdjacent(false, cageTile.getGridPosition() + 1));
-            tileStyle.append(findAdjacent(false, cageTile.getGridPosition() + gridSize));
-            tileStyle.append(findAdjacent(false, cageTile.getGridPosition() - 1));
-
-            cageTile.setStyle(tileStyle.toString());
+            String tileStyle = "-fx-border-width: " +
+                    findAdjacent(false, cageTile.getGridPosition() - gridSize) +
+                    findAdjacent(false, cageTile.getGridPosition() + 1) +
+                    findAdjacent(false, cageTile.getGridPosition() + gridSize) +
+                    findAdjacent(false, cageTile.getGridPosition() - 1);
+            cageTile.addBorder(tileStyle);
         }
     }
 
