@@ -1,4 +1,3 @@
-import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
 // The subclass for a single tile in the grid.
@@ -44,9 +43,8 @@ public class Tile extends StackPane {
 
     // Highlights the tile.
     public void selectTile() {
-        this.setStyle("-fx-border-width: 2;" +
+        this.setStyle("-fx-border-width: 3;" +
                       "-fx-border-color: red;");
-
         selected = true;
     }
 

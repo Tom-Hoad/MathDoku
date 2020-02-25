@@ -29,6 +29,11 @@ public class Main extends Application {
         optionsHBox.setPadding(new Insets(5, 5, 10, 5));
         optionsHBox.setAlignment(Pos.CENTER);
 
+        // Creates the button bar at the bottom.
+        HBox buttonHBox = new HBox(5);
+        buttonHBox.setPadding(new Insets(10, 5, 5, 5));
+        buttonHBox.setAlignment(Pos.CENTER);
+
         // Adds functionality elements to the action bar.
         Button undoButton = new Button("Undo");
         Button redoButton = new Button("Redo");
@@ -44,6 +49,7 @@ public class Main extends Application {
 
         // Creates a 2d array of all tiles.
         Tile[][] tiles = new Tile[gridSize][gridSize];
+        mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize, tiles));
 
         // Creates the grid pane.
         GridPane gridPane = new GridPane();
@@ -60,12 +66,20 @@ public class Main extends Application {
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, tiles));
                 gridPane.add(tile, x, y);
             }
+
+            // Adds number buttons to below the grid.
+            Button numButton = new Button(String.valueOf(x + 1));
+            numButton.setPrefSize(50, 50);
+            numButton.setFont(new Font(30));
+            numButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new NumberButtonHandler(x + 1, tiles));
+            buttonHBox.getChildren().add(numButton);
         }
-        mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize, tiles));
+        // Handler for cages, win and mistake detection.
 
         // Finishes setting up the GUI.
         mainPane.add(optionsHBox, 0, 0);
         mainPane.add(gridPane, 0, 1);
+        mainPane.add(buttonHBox, 0, 2);
         Scene scene = new Scene(mainPane);
         stage.setScene(scene);
         stage.setResizable(true);
@@ -121,22 +135,52 @@ public class Main extends Application {
         public void handle(KeyEvent event) {
             // Returns the number pressed.
             KeyCode key = event.getCode();
-            KeyCode[] codes = {KeyCode.DIGIT2, KeyCode.DIGIT3, KeyCode.DIGIT4, KeyCode.DIGIT5,
-                    KeyCode.DIGIT6, KeyCode.DIGIT7, KeyCode.DIGIT8};
+            KeyCode[] codes = {KeyCode.DIGIT1, KeyCode.DIGIT2, KeyCode.DIGIT3, KeyCode.DIGIT4,
+                               KeyCode.DIGIT5, KeyCode.DIGIT6, KeyCode.DIGIT7, KeyCode.DIGIT8};
 
             // Displays the number on the tile.
-            for (int i = 0; i <= gridSize - 2; i++) {
-                if (key == codes[i]) {
-                    try {
-                        Tile selectedTile = getSelected(tiles);
-                        selectedTile.getChildren().clear();
-                        Label label = new Label(key.toString().substring(5));
-                        label.setFont(new Font(50));
-                        selectedTile.getChildren().add(label);
-                    } catch (NullPointerException e) {
-                        System.out.println("No tile has been selected.");
+            try {
+                if (key != KeyCode.BACK_SPACE) {
+                    for (int i = 0; i <= gridSize - 1; i++) {
+                        if (key == codes[i]) {
+                            Tile selectedTile = getSelected(tiles);
+                            selectedTile.getChildren().clear();
+                            Label label = new Label(key.toString().substring(5));
+                            label.setFont(new Font(50));
+                            selectedTile.getChildren().add(label);
+                        }
                     }
+                } else {
+                    // Removes the value.
+                    Tile selectedTile = getSelected(tiles);
+                    selectedTile.getChildren().clear();
                 }
+            } catch (NullPointerException e) {
+                System.out.println("No tile has been selected.");
+            }
+        }
+    }
+
+    // Event handler code for pressing a number button.
+    class NumberButtonHandler implements EventHandler<MouseEvent> {
+        private int number;
+        private Tile[][] tiles;
+
+        public NumberButtonHandler(int number, Tile[][] tiles) {
+            this.number = number;
+            this.tiles = tiles;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
+            try {
+                Tile selectedTile = getSelected(tiles);
+                selectedTile.getChildren().clear();
+                Label label = new Label(String.valueOf(number));
+                label.setFont(new Font(50));
+                selectedTile.getChildren().add(label);
+            } catch (NullPointerException e) {
+                System.out.println("No tile has been selected.");
             }
         }
     }
