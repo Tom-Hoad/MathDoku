@@ -44,6 +44,7 @@ public class Main extends Application {
         Button loadTextButton = new Button("Load from Text");
         Label mistakesLabel = new Label("Click to show mistakes:");
         CheckBox mistakesCheck = new CheckBox();
+        mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(mistakesCheck));
         optionsHBox.getChildren().addAll(undoButton, redoButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
 
         // Sets grid pane size parameters.
@@ -104,6 +105,14 @@ public class Main extends Application {
         return null;
     }
 
+    // Adds a number to the tile.
+    public void displayNumber(Tile selectedTile, String number) {
+        selectedTile.getChildren().remove(0);
+        Label label = new Label(number);
+        label.setFont(new Font(50));
+        selectedTile.getChildren().add(0, label);
+    }
+
     // Event handler code for click a tile.
     class TileClickHandler implements EventHandler<MouseEvent> {
         private Tile tile;
@@ -149,6 +158,7 @@ public class Main extends Application {
                 if (key != KeyCode.BACK_SPACE) {
                     for (int i = 0; i <= gridSize - 1; i++) {
                         if (key == codes[i]) {
+                            displayNumber(getSelected(tiles), key.toString().substring(5));
                             Tile selectedTile = getSelected(tiles);
                             selectedTile.getChildren().remove(0);
                             Label label = new Label(key.toString().substring(5));
@@ -180,14 +190,27 @@ public class Main extends Application {
 
         @Override
         public void handle(MouseEvent event) {
+            // Displays the number on the tile.
             try {
-                Tile selectedTile = getSelected(tiles);
-                selectedTile.getChildren().remove(0);
-                Label label = new Label(String.valueOf(number));
-                label.setFont(new Font(50));
-                selectedTile.getChildren().add(0, label);
+                displayNumber(getSelected(tiles), String.valueOf(number));
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
+            }
+        }
+    }
+
+    // The event handler for selecting to check the mistakes.
+    class MistakeCheckHandler implements EventHandler<MouseEvent> {
+        private CheckBox mistakeCheck;
+
+        public MistakeCheckHandler(CheckBox mistakeCheck) {
+            this.mistakeCheck = mistakeCheck;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
+            if (mistakeCheck.isSelected()) {
+                System.out.println(event);
             }
         }
     }
