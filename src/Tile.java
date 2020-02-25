@@ -1,19 +1,18 @@
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 
 // The subclass for a single tile in the grid.
-public class Tile extends Pane {
+public class Tile extends StackPane {
     private int x;
     private int y;
     private int gridSize;
     private boolean selected;
 
+    // The Tile subclass constructor.
     public Tile(int x, int y, int gridSize) {
         this.x = x;
         this.y = y;
         this.gridSize = gridSize;
-
-        setDefault();
-        this.setOnMouseClicked(event -> selectTile());
     }
 
     // Styles the tile.
@@ -54,10 +53,5 @@ public class Tile extends Pane {
     // Gets if the tile is selected.
     public boolean isSelected() {
         return selected;
-    }
-
-    // Returns the tile.
-    public Tile getTile() {
-        return this;
     }
 }

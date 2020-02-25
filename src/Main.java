@@ -10,11 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeType;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -46,19 +42,26 @@ public class Main extends Application {
         int gridSize = 6;
         int tileSize = 100;
 
-        // Creates the grid made of tiles.
+        // Creates a 2d array of all tiles.
+        Tile[][] tiles = new Tile[gridSize][gridSize];
+
+        // Creates the grid pane.
         GridPane gridPane = new GridPane();
         gridPane.setHgap(1);
         gridPane.setVgap(1);
-        gridPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize));
 
+        // Fills the grid with tiles.
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
                 Tile tile = new Tile(x, y, gridSize);
                 tile.setPrefSize(tileSize, tileSize);
+                tile.setDefault();
+                tiles[x][y] = tile;
+                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, tiles));
                 gridPane.add(tile, x, y);
             }
         }
+        mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize, tiles));
 
         // Finishes setting up the GUI.
         mainPane.add(optionsHBox, 0, 0);
@@ -69,12 +72,49 @@ public class Main extends Application {
         stage.show();
     }
 
+    // Returns the selected tile.
+    public Tile getSelected(Tile[][] tiles) {
+        for (Tile[] tile : tiles) {
+            for (int i = 0; i < tiles.length; i++) {
+                if (tile[i].isSelected()) {
+                    return tile[i];
+                }
+            }
+        }
+        return null;
+    }
+
+    // Event handler code for click a tile.
+    class TileClickHandler implements EventHandler<MouseEvent> {
+        private Tile tile;
+        private Tile[][] tiles;
+
+        public TileClickHandler(Tile tile, Tile[][] tiles) {
+            this.tile = tile;
+            this.tiles = tiles;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
+            // Defaults the selected tile and selects the new tile.
+            try {
+                getSelected(tiles).setDefault();
+                tile.selectTile();
+            } catch (NullPointerException e) {
+                tile.selectTile();
+            }
+
+        }
+    }
+
     // Event handler code for pressing a key.
     class KeyPressedHandler implements EventHandler<KeyEvent> {
         private int gridSize;
+        private Tile[][] tiles;
 
-        public KeyPressedHandler(int gridSize) {
+        public KeyPressedHandler(int gridSize, Tile[][] tiles) {
             this.gridSize = gridSize;
+            this.tiles = tiles;
         }
 
         @Override
@@ -82,11 +122,20 @@ public class Main extends Application {
             // Returns the number pressed.
             KeyCode key = event.getCode();
             KeyCode[] codes = {KeyCode.DIGIT2, KeyCode.DIGIT3, KeyCode.DIGIT4, KeyCode.DIGIT5,
-                                KeyCode.DIGIT6, KeyCode.DIGIT7, KeyCode.DIGIT8};
+                    KeyCode.DIGIT6, KeyCode.DIGIT7, KeyCode.DIGIT8};
 
+            // Displays the number on the tile.
             for (int i = 0; i <= gridSize - 2; i++) {
                 if (key == codes[i]) {
-                    System.out.println("A valid number key was pressed.");
+                    try {
+                        Tile selectedTile = getSelected(tiles);
+                        selectedTile.getChildren().clear();
+                        Label label = new Label(key.toString().substring(5));
+                        label.setFont(new Font(50));
+                        selectedTile.getChildren().add(label);
+                    } catch (NullPointerException e) {
+                        System.out.println("No tile has been selected.");
+                    }
                 }
             }
         }
