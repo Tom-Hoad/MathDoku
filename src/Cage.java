@@ -2,27 +2,30 @@ import java.util.ArrayList;
 
 // The class for a cage on the grid.
 public class Cage {
-    private int result;
+    private String result;
     private String operation;
-    private ArrayList<Tile> cageTiles;
-    private String cageDefinition;
+    private String cageTiles;
 
     // The cage class constructor.
     public Cage(String cageDefinition) {
-        this.cageDefinition = cageDefinition;
-        this.result = getResult();
+        int cageSplit = cageDefinition.indexOf(" ");
+        this.result = cageDefinition.substring(0, cageSplit - 1);
+        this.operation = cageDefinition.substring(cageSplit - 1, cageSplit);
+        this.cageTiles = cageDefinition.substring(cageSplit + 1);
     }
 
-    // Gets the cage result.
-    public int getResult() {
-        int nonNum = 0;
-        for (int i = 0; i < cageDefinition.length(); i++) {
-            try {
-                Integer.valueOf(cageDefinition.charAt(i));
-            } catch (NumberFormatException e) {
-                nonNum = i;
-            }
-        }
-        return nonNum;
+    // Gets the expected result.
+    public String getResult() {
+        return result;
+    }
+
+    // Gets the operation.
+    public String getOperation() {
+        return operation;
+    }
+
+    // Gets list of tiles in the cage.
+    public String getCageTiles() {
+        return cageTiles;
     }
 }

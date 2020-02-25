@@ -13,6 +13,9 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.util.Scanner;
+
 public class Main extends Application {
 
     @Override
@@ -48,7 +51,7 @@ public class Main extends Application {
         int tileSize = 100;
 
         // Creates a 2d array of all tiles.
-        Tile[][] tiles = new Tile[gridSize][gridSize];
+        Tile[] tiles = new Tile[gridSize*gridSize];
         mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize, tiles));
 
         // Creates the grid pane.
@@ -59,10 +62,10 @@ public class Main extends Application {
         // Fills the grid with tiles.
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
-                Tile tile = new Tile(x, y, gridSize);
+                Tile tile = new Tile((x * gridSize) + (y + 1));
                 tile.setPrefSize(tileSize, tileSize);
                 tile.setDefault();
-                tiles[x][y] = tile;
+                tiles[(x * gridSize) + y] = tile;
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, tiles));
                 gridPane.add(tile, x, y);
             }
@@ -74,7 +77,12 @@ public class Main extends Application {
             numButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new NumberButtonHandler(x + 1, tiles));
             buttonHBox.getChildren().add(numButton);
         }
-        // Handler for cages, win and mistake detection.
+        // Reads in the cages for the example grid - TEMPORARY CODE
+        Scanner reader = new Scanner(new File("example.txt"));
+        while (reader.hasNextLine()) {
+            Cage cage = new Cage(reader.nextLine());
+            //System.out.println(cage.getResult() + cage.getOperation() + " " +cage.getCageTiles());
+        }
 
         // Finishes setting up the GUI.
         mainPane.add(optionsHBox, 0, 0);
@@ -87,12 +95,10 @@ public class Main extends Application {
     }
 
     // Returns the selected tile.
-    public Tile getSelected(Tile[][] tiles) {
-        for (Tile[] tile : tiles) {
-            for (int i = 0; i < tiles.length; i++) {
-                if (tile[i].isSelected()) {
-                    return tile[i];
-                }
+    public Tile getSelected(Tile[] tiles) {
+        for (Tile tile : tiles) {
+            if (tile.isSelected()) {
+                return tile;
             }
         }
         return null;
@@ -101,9 +107,9 @@ public class Main extends Application {
     // Event handler code for click a tile.
     class TileClickHandler implements EventHandler<MouseEvent> {
         private Tile tile;
-        private Tile[][] tiles;
+        private Tile[] tiles;
 
-        public TileClickHandler(Tile tile, Tile[][] tiles) {
+        public TileClickHandler(Tile tile, Tile[] tiles) {
             this.tile = tile;
             this.tiles = tiles;
         }
@@ -124,9 +130,9 @@ public class Main extends Application {
     // Event handler code for pressing a key.
     class KeyPressedHandler implements EventHandler<KeyEvent> {
         private int gridSize;
-        private Tile[][] tiles;
+        private Tile[] tiles;
 
-        public KeyPressedHandler(int gridSize, Tile[][] tiles) {
+        public KeyPressedHandler(int gridSize, Tile[] tiles) {
             this.gridSize = gridSize;
             this.tiles = tiles;
         }
@@ -164,9 +170,9 @@ public class Main extends Application {
     // Event handler code for pressing a number button.
     class NumberButtonHandler implements EventHandler<MouseEvent> {
         private int number;
-        private Tile[][] tiles;
+        private Tile[] tiles;
 
-        public NumberButtonHandler(int number, Tile[][] tiles) {
+        public NumberButtonHandler(int number, Tile[] tiles) {
             this.number = number;
             this.tiles = tiles;
         }
