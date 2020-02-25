@@ -62,10 +62,10 @@ public class Main extends Application {
         // Fills the grid with tiles.
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
-                Tile tile = new Tile((x * gridSize) + (y + 1));
+                Tile tile = new Tile((x + 1) + (y * gridSize));
                 tile.setPrefSize(tileSize, tileSize);
                 tile.setDefault();
-                tiles[(x * gridSize) + y] = tile;
+                tiles[x + (gridSize * y)] = tile;
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, tiles));
                 gridPane.add(tile, x, y);
             }
@@ -80,8 +80,8 @@ public class Main extends Application {
         // Reads in the cages for the example grid - TEMPORARY CODE
         Scanner reader = new Scanner(new File("example.txt"));
         while (reader.hasNextLine()) {
-            Cage cage = new Cage(reader.nextLine());
-            //System.out.println(cage.getResult() + cage.getOperation() + " " +cage.getCageTiles());
+            Cage cage = new Cage(gridSize, reader.nextLine(), tiles);
+            cage.showCage();
         }
 
         // Finishes setting up the GUI.
@@ -150,16 +150,17 @@ public class Main extends Application {
                     for (int i = 0; i <= gridSize - 1; i++) {
                         if (key == codes[i]) {
                             Tile selectedTile = getSelected(tiles);
-                            selectedTile.getChildren().clear();
+                            selectedTile.getChildren().remove(0);
                             Label label = new Label(key.toString().substring(5));
                             label.setFont(new Font(50));
-                            selectedTile.getChildren().add(label);
+                            selectedTile.getChildren().add(0, label);
                         }
                     }
                 } else {
                     // Removes the value.
                     Tile selectedTile = getSelected(tiles);
-                    selectedTile.getChildren().clear();
+                    selectedTile.getChildren().remove(0);
+                    selectedTile.getChildren().add(0, new Label(""));
                 }
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
@@ -181,10 +182,10 @@ public class Main extends Application {
         public void handle(MouseEvent event) {
             try {
                 Tile selectedTile = getSelected(tiles);
-                selectedTile.getChildren().clear();
+                selectedTile.getChildren().remove(0);
                 Label label = new Label(String.valueOf(number));
                 label.setFont(new Font(50));
-                selectedTile.getChildren().add(label);
+                selectedTile.getChildren().add(0, label);
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
             }
