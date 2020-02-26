@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -51,10 +52,11 @@ public class Main extends Application {
         int gridSize = 6;
         int tileSize = 100;
 
-        // Creates a 2d array of all tiles.
+        // Creates a 2d array of all tiles and an array list of cages.
         Tile[] tiles = new Tile[gridSize*gridSize];
+        ArrayList<Cage> cages = new ArrayList<>();
         mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize, tiles));
-        mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(mistakesCheck, gridSize, tiles));
+        mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(mistakesCheck, gridSize, tiles, cages));
 
         // Creates the grid pane.
         GridPane gridPane = new GridPane();
@@ -84,6 +86,7 @@ public class Main extends Application {
         while (reader.hasNextLine()) {
             Cage cage = new Cage(gridSize, reader.nextLine(), tiles);
             cage.showCage();
+            cages.add(cage);
         }
 
         // Finishes setting up the GUI.
@@ -202,11 +205,13 @@ public class Main extends Application {
         private CheckBox mistakeCheck;
         private int gridSize;
         private Tile[] tiles;
+        private ArrayList<Cage> cages;
 
-        public MistakeCheckHandler(CheckBox mistakeCheck, int gridSize, Tile[] tiles) {
+        public MistakeCheckHandler(CheckBox mistakeCheck, int gridSize, Tile[] tiles, ArrayList<Cage> cages) {
             this.mistakeCheck = mistakeCheck;
             this.gridSize = gridSize;
             this.tiles = tiles;
+            this.cages = cages;
         }
 
         @Override
@@ -259,8 +264,41 @@ public class Main extends Application {
                     }
                 }
 
-                System.out.println(String.valueOf(correct));
-                // Check cages
+                // Checks cages if correct.
+                for (Cage cage : cages) {
+                    int givenResult = 0;
+                    switch(cage.getOperation()) {
+                        // Add values.
+                        case "+":
+                            for (Tile tile : cage.getCageTiles()) {
+                                givenResult += tile.getValue();
+                            }
+                            break;
+                        // Multiply values.
+                        case "x":
+                            givenResult = 1;
+                            for (Tile tile : cage.getCageTiles()) {
+                                givenResult = givenResult * tile.getValue();
+                            }
+                            break;
+                        // Minus values.
+                        case "-":
+                            break;
+                        // Divide values.
+                        case "÷":
+                            break;
+                    }
+                    if (givenResult != cage.getResult()) {
+                        correct = false;
+                    }
+                }
+
+                // Tells the user if they have won or not.
+                if (correct) {
+                    System.out.println("You've won!");
+                } else {
+                    System.out.println("There are some mistakes...");
+                }
             }
         }
     }

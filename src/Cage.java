@@ -6,7 +6,7 @@ import javafx.scene.text.Font;
 // The class for a cage on the grid.
 public class Cage {
     private int gridSize;
-    private String result;
+    private int result;
     private String operation;
     private Tile[] cageTiles;
 
@@ -15,7 +15,7 @@ public class Cage {
         this.gridSize = gridSize;
 
         int cageSplit = cageDefinition.indexOf(" ");
-        this.result = cageDefinition.substring(0, cageSplit - 1);
+        this.result = Integer.parseInt(cageDefinition.substring(0, cageSplit - 1));
         this.operation = cageDefinition.substring(cageSplit - 1, cageSplit);
 
         // Finds the tiles that belong to the cage.
@@ -66,5 +66,20 @@ public class Cage {
         } else {
             return "4 ";
         }
+    }
+
+    // Gets the desired result of a cage.
+    public int getResult() {
+        return result;
+    }
+
+    // Gets the operation of the cage.
+    public String getOperation() {
+        return operation;
+    }
+
+    // Gets the array of tiles in the cage.
+    public Tile[] getCageTiles() {
+        return cageTiles;
     }
 }
