@@ -3,15 +3,17 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
+import java.util.ArrayList;
+
 // The class for a cage on the grid.
 public class Cage {
     private int gridSize;
     private int result;
     private String operation;
-    private Tile[] cageTiles;
+    private ArrayList<Tile> cageTiles;
 
     // The cage class constructor.
-    public Cage(int gridSize, String cageDefinition, Tile[] tiles) {
+    public Cage(int gridSize, String cageDefinition, ArrayList<Tile> tiles) {
         this.gridSize = gridSize;
 
         int cageSplit = cageDefinition.indexOf(" ");
@@ -20,9 +22,9 @@ public class Cage {
 
         // Finds the tiles that belong to the cage.
         String[] tilePositions = cageDefinition.substring(cageSplit + 1).split(",");
-        this.cageTiles = new Tile[tilePositions.length];
-        for (int i = 0; i < tilePositions.length; i++) {
-            cageTiles[i] = tiles[Integer.parseInt(tilePositions[i]) - 1];
+        this.cageTiles = new ArrayList<>();
+        for (String tilePosition : tilePositions) {
+            cageTiles.add(tiles.get(Integer.parseInt(tilePosition) - 1));
         }
     }
 
@@ -79,7 +81,7 @@ public class Cage {
     }
 
     // Gets the array of tiles in the cage.
-    public Tile[] getCageTiles() {
+    public ArrayList<Tile> getCageTiles() {
         return cageTiles;
     }
 }

@@ -52,8 +52,8 @@ public class Main extends Application {
         int gridSize = 6;
         int tileSize = 100;
 
-        // Creates a 2d array of all tiles and an array list of cages.
-        Tile[] tiles = new Tile[gridSize*gridSize];
+        // Creates an array list of all tiles and  cages.
+        ArrayList<Tile> tiles = new ArrayList<>();
         ArrayList<Cage> cages = new ArrayList<>();
         mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize, tiles));
         mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(mistakesCheck, gridSize, tiles, cages));
@@ -69,7 +69,7 @@ public class Main extends Application {
                 Tile tile = new Tile((x + 1) + (y * gridSize));
                 tile.setPrefSize(tileSize, tileSize);
                 tile.setDefault();
-                tiles[x + (gridSize * y)] = tile;
+                tiles.add(tile);
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, tiles));
                 gridPane.add(tile, x, y);
             }
@@ -100,7 +100,7 @@ public class Main extends Application {
     }
 
     // Returns the selected tile.
-    public Tile getSelected(Tile[] tiles) {
+    public Tile getSelected(ArrayList<Tile> tiles) {
         for (Tile tile : tiles) {
             if (tile.isSelected()) {
                 return tile;
@@ -118,12 +118,21 @@ public class Main extends Application {
         selectedTile.getChildren().add(0, label);
     }
 
+    // A recursive algorithm to find the factorial.
+    public int factorial(int n) {
+        if (n == 0) {
+            return 1;
+        } else {
+            return n * factorial(n - 1);
+        }
+    }
+
     // Event handler code for click a tile.
     class TileClickHandler implements EventHandler<MouseEvent> {
         private Tile tile;
-        private Tile[] tiles;
+        private ArrayList<Tile> tiles;
 
-        public TileClickHandler(Tile tile, Tile[] tiles) {
+        public TileClickHandler(Tile tile, ArrayList<Tile> tiles) {
             this.tile = tile;
             this.tiles = tiles;
         }
@@ -144,9 +153,9 @@ public class Main extends Application {
     // Event handler code for pressing a key.
     class KeyPressedHandler implements EventHandler<KeyEvent> {
         private int gridSize;
-        private Tile[] tiles;
+        private ArrayList<Tile> tiles;
 
-        public KeyPressedHandler(int gridSize, Tile[] tiles) {
+        public KeyPressedHandler(int gridSize, ArrayList<Tile> tiles) {
             this.gridSize = gridSize;
             this.tiles = tiles;
         }
@@ -182,9 +191,9 @@ public class Main extends Application {
     // Event handler code for pressing a number button.
     class NumberButtonHandler implements EventHandler<MouseEvent> {
         private int number;
-        private Tile[] tiles;
+        private ArrayList<Tile> tiles;
 
-        public NumberButtonHandler(int number, Tile[] tiles) {
+        public NumberButtonHandler(int number, ArrayList<Tile> tiles) {
             this.number = number;
             this.tiles = tiles;
         }
@@ -204,10 +213,10 @@ public class Main extends Application {
     class MistakeCheckHandler implements EventHandler<MouseEvent> {
         private CheckBox mistakeCheck;
         private int gridSize;
-        private Tile[] tiles;
+        private ArrayList<Tile> tiles;
         private ArrayList<Cage> cages;
 
-        public MistakeCheckHandler(CheckBox mistakeCheck, int gridSize, Tile[] tiles, ArrayList<Cage> cages) {
+        public MistakeCheckHandler(CheckBox mistakeCheck, int gridSize, ArrayList<Tile> tiles, ArrayList<Cage> cages) {
             this.mistakeCheck = mistakeCheck;
             this.gridSize = gridSize;
             this.tiles = tiles;
@@ -228,12 +237,12 @@ public class Main extends Application {
 
                 // Check rows if correct.
                 for (int i = 0; i < gridSize; i++) {
-                    Tile[] rowTiles = Arrays.copyOfRange(tiles, (i * gridSize), ((i + 1) * gridSize));
+                    ArrayList<Tile> rowTiles = new ArrayList<>(tiles.subList((i * gridSize), ((i + 1) * gridSize)));
 
                     // Gets values of the row.
-                    int[] actualRow = new int[rowTiles.length];
+                    int[] actualRow = new int[rowTiles.size()];
                     for (int j = 0; j < actualRow.length; j++) {
-                        actualRow[j] = rowTiles[j].getValue();
+                        actualRow[j] = rowTiles.get(j).getValue();
                     }
                     Arrays.sort(actualRow);
 
@@ -283,9 +292,17 @@ public class Main extends Application {
                             break;
                         // Minus values.
                         case "-":
+                            for (int i = 0; i < factorial(cage.getCageTiles().size()); i++) {
+                                for (Tile tile : cage.getCageTiles()) {
+                                    givenResult -= tile.getValue();
+                                }
+                            }
                             break;
                         // Divide values.
                         case "÷":
+                            for (Tile tile : cage.getCageTiles()) {
+                                givenResult = tile.getValue();
+                            }
                             break;
                     }
                     if (givenResult != cage.getResult()) {
