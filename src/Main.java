@@ -240,6 +240,22 @@ public class Main extends Application {
                 }
 
                 // Checks columns if correct.
+                for (int i = 0; i < tiles.length; i++) {
+                    Tile[] rowTiles = Arrays.copyOfRange(tiles, i, ((i + 1) * gridSize) - 1);
+
+                    // Gets values of row.
+                    int[] actualRow = new int[rowTiles.length];
+                    for (Tile rowTile : rowTiles) {
+                        actualRow[i] = rowTile.getValue();
+                    }
+                    Arrays.sort(actualRow);
+
+                    // Checks if the hashes match.
+                    if (Arrays.hashCode(actualRow) != expectedHash) {
+                        correct = false;
+                        break;
+                    }
+                }
 
                 // Check cages
             }
