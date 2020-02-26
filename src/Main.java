@@ -221,14 +221,15 @@ public class Main extends Application {
                 }
                 int expectedHash = Arrays.hashCode(expectedTiles);
 
+                /*
                 // Check rows if correct.
-                for (int i = 0; i < tiles.length; i++) {
-                    Tile[] rowTiles = Arrays.copyOfRange(tiles, i, ((i + 1) * gridSize) - 1);
+                for (int i = 0; i < gridSize; i++) {
+                    Tile[] rowTiles = Arrays.copyOfRange(tiles, (i * gridSize), ((i + 1) * gridSize));
 
-                    // Gets values of row.
+                    // Gets values of the row.
                     int[] actualRow = new int[rowTiles.length];
-                    for (Tile rowTile : rowTiles) {
-                        actualRow[i] = rowTile.getValue();
+                    for (int j = 0; j < actualRow.length; j++) {
+                        actualRow[j] = rowTiles[j].getValue();
                     }
                     Arrays.sort(actualRow);
 
@@ -237,26 +238,35 @@ public class Main extends Application {
                         correct = false;
                         break;
                     }
-                }
+                }*/
 
                 // Checks columns if correct.
-                for (int i = 0; i < tiles.length; i++) {
-                    Tile[] rowTiles = Arrays.copyOfRange(tiles, i, ((i + 1) * gridSize) - 1);
-
-                    // Gets values of row.
-                    int[] actualRow = new int[rowTiles.length];
-                    for (Tile rowTile : rowTiles) {
-                        actualRow[i] = rowTile.getValue();
+                for (int i = 0; i < gridSize; i++) {
+                    // Gets the arrays of columns.
+                    Tile[] columnTiles = new Tile[gridSize];
+                    int column = 0;
+                    for (Tile columnTile : tiles) {
+                        if (columnTile.getGridPosition() - i - 1 % gridSize == 0) {
+                            columnTiles[column] = columnTile;
+                            column++;
+                        }
                     }
-                    Arrays.sort(actualRow);
+
+                    // Gets values of the row.
+                    int[] actualColumn = new int[columnTiles.length];
+                    for (int j = 0; j < actualColumn.length; j++) {
+                        actualColumn[j] = columnTiles[j].getValue();
+                    }
+                    Arrays.sort(actualColumn);
 
                     // Checks if the hashes match.
-                    if (Arrays.hashCode(actualRow) != expectedHash) {
+                    if (Arrays.hashCode(actualColumn) != expectedHash) {
                         correct = false;
                         break;
                     }
                 }
 
+                System.out.println(String.valueOf(correct));
                 // Check cages
             }
         }
