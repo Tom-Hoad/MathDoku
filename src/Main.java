@@ -221,7 +221,6 @@ public class Main extends Application {
                 }
                 int expectedHash = Arrays.hashCode(expectedTiles);
 
-                /*
                 // Check rows if correct.
                 for (int i = 0; i < gridSize; i++) {
                     Tile[] rowTiles = Arrays.copyOfRange(tiles, (i * gridSize), ((i + 1) * gridSize));
@@ -238,24 +237,18 @@ public class Main extends Application {
                         correct = false;
                         break;
                     }
-                }*/
+                }
 
                 // Checks columns if correct.
                 for (int i = 0; i < gridSize; i++) {
                     // Gets the arrays of columns.
-                    Tile[] columnTiles = new Tile[gridSize];
-                    int column = 0;
+                    int[] actualColumn = new int[gridSize];
+                    int count = 0;
                     for (Tile columnTile : tiles) {
-                        if (columnTile.getGridPosition() - i - 1 % gridSize == 0) {
-                            columnTiles[column] = columnTile;
-                            column++;
+                        if ((columnTile.getGridPosition() - 1) % gridSize == i) {
+                            actualColumn[count] = columnTile.getValue();
+                            count++;
                         }
-                    }
-
-                    // Gets values of the row.
-                    int[] actualColumn = new int[columnTiles.length];
-                    for (int j = 0; j < actualColumn.length; j++) {
-                        actualColumn[j] = columnTiles[j].getValue();
                     }
                     Arrays.sort(actualColumn);
 
