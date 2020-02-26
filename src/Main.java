@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main extends Application {
@@ -44,7 +45,6 @@ public class Main extends Application {
         Button loadTextButton = new Button("Load from Text");
         Label mistakesLabel = new Label("Click to show mistakes:");
         CheckBox mistakesCheck = new CheckBox();
-        mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(mistakesCheck));
         optionsHBox.getChildren().addAll(undoButton, redoButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
 
         // Sets grid pane size parameters.
@@ -54,6 +54,7 @@ public class Main extends Application {
         // Creates a 2d array of all tiles.
         Tile[] tiles = new Tile[gridSize*gridSize];
         mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize, tiles));
+        mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(mistakesCheck, gridSize, tiles));
 
         // Creates the grid pane.
         GridPane gridPane = new GridPane();
@@ -108,6 +109,7 @@ public class Main extends Application {
     // Adds a number to the tile.
     public void displayNumber(Tile selectedTile, String number) {
         selectedTile.getChildren().remove(0);
+        selectedTile.setValue(Integer.parseInt(number));
         Label label = new Label(number);
         label.setFont(new Font(50));
         selectedTile.getChildren().add(0, label);
@@ -159,16 +161,12 @@ public class Main extends Application {
                     for (int i = 0; i <= gridSize - 1; i++) {
                         if (key == codes[i]) {
                             displayNumber(getSelected(tiles), key.toString().substring(5));
-                            Tile selectedTile = getSelected(tiles);
-                            selectedTile.getChildren().remove(0);
-                            Label label = new Label(key.toString().substring(5));
-                            label.setFont(new Font(50));
-                            selectedTile.getChildren().add(0, label);
                         }
                     }
                 } else {
                     // Removes the value.
                     Tile selectedTile = getSelected(tiles);
+                    selectedTile.setValue(0);
                     selectedTile.getChildren().remove(0);
                     selectedTile.getChildren().add(0, new Label(""));
                 }
@@ -202,15 +200,48 @@ public class Main extends Application {
     // The event handler for selecting to check the mistakes.
     class MistakeCheckHandler implements EventHandler<MouseEvent> {
         private CheckBox mistakeCheck;
+        private int gridSize;
+        private Tile[] tiles;
 
-        public MistakeCheckHandler(CheckBox mistakeCheck) {
+        public MistakeCheckHandler(CheckBox mistakeCheck, int gridSize, Tile[] tiles) {
             this.mistakeCheck = mistakeCheck;
+            this.gridSize = gridSize;
+            this.tiles = tiles;
         }
 
         @Override
         public void handle(MouseEvent event) {
             if (mistakeCheck.isSelected()) {
-                System.out.println(event);
+                boolean correct = true;
+
+                // Creates the expected hash.
+                int[] expectedTiles = new int[gridSize];
+                for (int i = 0; i < gridSize; i++) {
+                    expectedTiles[i] = i + 1;
+                }
+                int expectedHash = Arrays.hashCode(expectedTiles);
+
+                // Check rows if correct.
+                for (int i = 0; i < tiles.length; i++) {
+                    Tile[] rowTiles = Arrays.copyOfRange(tiles, i, ((i + 1) * gridSize) - 1);
+
+                    // Gets values of row.
+                    int[] actualRow = new int[rowTiles.length];
+                    for (Tile rowTile : rowTiles) {
+                        actualRow[i] = rowTile.getValue();
+                    }
+                    Arrays.sort(actualRow);
+
+                    // Checks if the hashes match.
+                    if (Arrays.hashCode(actualRow) != expectedHash) {
+                        correct = false;
+                        break;
+                    }
+                }
+
+                // Checks columns if correct.
+
+                // Check cages
             }
         }
     }
