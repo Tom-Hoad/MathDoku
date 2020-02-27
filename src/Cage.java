@@ -23,13 +23,9 @@ public class Cage {
 
         // Finds the tiles that belong to the cage.
         String[] tilePositions = cageDefinition.substring(cageSplit + 1).split(",");
-        System.out.println(Arrays.toString(tilePositions));
         this.cageTiles = new ArrayList<>();
         for (String tilePosition : tilePositions) {
             cageTiles.add(tiles.get(Integer.parseInt(tilePosition) - 1));
-        }
-        for (Tile cageTile : cageTiles) {
-            System.out.println(cageTile.getGridPosition());
         }
     }
 

@@ -19,7 +19,6 @@ public class Tile extends StackPane {
     // Defaults the tile.
     public void setDefault() {
         this.setStyle(style);
-        this.getChildren().set(0, new Label(String.valueOf(gridPosition)));
         selected = false;
     }
 

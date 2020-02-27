@@ -307,7 +307,9 @@ public class Main extends Application {
                                 divCage.remove(tile);
                             }
                             break;*/
+                        // TEMPORARY - whilst working on subtract and divide.
                         default:
+                            givenResult = cage.getResult();
                             break;
                     }
                     if (givenResult != cage.getResult()) {
