@@ -219,26 +219,31 @@ public class Main extends Application {
         public void handle(MouseEvent event) {
             if (mistakeCheck.isSelected()) {
                 boolean correct = true;
-                boolean zeroError = false;
 
                 // Checks cages if correct.
                 for (Cage cage : cages) {
+                    boolean zeroError = false;
+
                     // Creates an array list of all values.
                     ArrayList<Integer> cageValues = new ArrayList<>();
                     for (Tile tile : cage.getCageTiles()) {
                         if (tile.getValue() != 0) {
                             cageValues.add(tile.getValue());
                         } else {
-                          zeroError = true;
+                            zeroError = true;
                         }
                     }
 
-                    // Stops checking this cage if it contains an empty tile.
+                    // Skips to the next cage.
                     if (zeroError) {
                         for (Tile tile : cage.getCageTiles()) {
                             tile.mistakeTile();
                         }
                         continue;
+                    } else {
+                        for (Tile tile : cage.getCageTiles()) {
+                            tile.correctTile();
+                        }
                     }
 
                     int givenResult = 0;

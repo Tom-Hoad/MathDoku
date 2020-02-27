@@ -41,6 +41,12 @@ public class Tile extends StackPane {
         setDefault();
     }
 
+    // Removes highlights from the tile when a mistake is corrected.
+    public void correctTile() {
+        this.style = "-fx-border-color: black; ";
+        setDefault();
+    }
+
     // Gets if the tile is selected.
     public boolean isSelected() {
         return selected;
