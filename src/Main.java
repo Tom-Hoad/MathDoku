@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main extends Application {
@@ -119,13 +120,23 @@ public class Main extends Application {
         selectedTile.getChildren().add(0, label);
     }
 
-    // A recursive algorithm to find the factorial.
-    public int factorial(int n) {
-        if (n == 0) {
-            return 1;
+    // A recursive algorithm to find every permutations of an array.
+    public ArrayList<Integer> heapsAlgorithm(int size, ArrayList<Integer> cageValues) {
+        if (size == 1) {
+            System.out.println(cageValues);
+            return cageValues;
         } else {
-            return n * factorial(n - 1);
+            for (int i = 0; i < size; i++) {
+                heapsAlgorithm(size - 1, cageValues);
+
+                if (size % 2 == 0) {
+                    Collections.swap(cageValues, i, size - 1);
+                } else {
+                    Collections.swap(cageValues, 0, size - 1);
+                }
+            }
         }
+        return null;
     }
 
     // Event handler code for click a tile.
@@ -276,43 +287,41 @@ public class Main extends Application {
 
                 // Checks cages if correct.
                 for (Cage cage : cages) {
+                    // Creates an array list of all values.
+                    ArrayList<Integer> cageValues = new ArrayList<>();
+                    for (Tile tile : cage.getCageTiles()) {
+                        cageValues.add(tile.getValue());
+                    }
                     int givenResult = 0;
+
                     switch(cage.getOperation()) {
                         // Add values.
                         case "+":
-                            for (Tile tile : cage.getCageTiles()) {
-                                givenResult += tile.getValue();
+                            for (int tileValue : cageValues) {
+                                givenResult += tileValue;
                             }
                             break;
                         // Multiply values.
                         case "x":
                             givenResult = 1;
-                            for (Tile tile : cage.getCageTiles()) {
-                                givenResult = givenResult * tile.getValue();
+                            for (int tileValue : cageValues) {
+                                givenResult = givenResult * tileValue;
                             }
                             break;
-                        // Minus values.
-                        /*case "-":
-                            for (int i = 0; i < factorial(cage.getCageTiles().size()); i++) {
-                                for (Tile tile : cage.getCageTiles()) {
-                                    givenResult -= tile.getValue();
-                                }
-                            }
+                        // Minus values. HEAPS ALGORITHM
+                        case "-":
+                            heapsAlgorithm(cageValues.size(), cageValues);
                             break;
-                        // Divide values.
+                        /*
+                        // Divide values. HEAPS ALGORITHM
                         case "÷":
-                            for (Tile tile : cage.getCageTiles()) {
-                                givenResult = tile.getValue();
-                                ArrayList<Tile> divCage = cage.getCageTiles();
-                                divCage.remove(tile);
-                            }
                             break;*/
                         // TEMPORARY - whilst working on subtract and divide.
                         default:
                             givenResult = cage.getResult();
                             break;
                     }
-                    if (givenResult != cage.getResult()) {
+                    if (givenResult != cage.getResult() || !correct) {
                         correct = false;
                         break;
                     }
