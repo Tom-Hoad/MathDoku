@@ -1,12 +1,15 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
 // The class for checking cage mistakes.
 public class CageMistake {
+    private ArrayList<String> strPermutations;
     private ArrayList<ArrayList<Integer>> permutations;
 
     // The cage mistake class constructor.
     public CageMistake() {
+        this.strPermutations = new ArrayList<>();
         this.permutations = new ArrayList<>();
     }
 
@@ -14,7 +17,7 @@ public class CageMistake {
     public ArrayList<Integer> heapsAlgorithm(int size, ArrayList<Integer> cageValues) {
         // Finds the result of the permutation based on the given operation.
         if (size == 1) {
-            permutations.add(cageValues);
+            strPermutations.add(cageValues.toString());
             return cageValues;
         } else {
             for (int i = 0; i < size; i++) {
@@ -26,6 +29,23 @@ public class CageMistake {
                     Collections.swap(cageValues, 0, size - 1);
                 }
             }
+        }
+        splitPermutations();
+        return null;
+    }
+
+    // Converts the array list of string permutations to an array list of an array list of integers of permutations.
+    private ArrayList<ArrayList<Integer>> splitPermutations() {
+        for (String strPermutation : strPermutations) {
+            strPermutation = strPermutation.substring(1, strPermutation.length() - 1);
+            String[] splitPerms = strPermutation.split(", ");
+
+
+            ArrayList<Integer> perms = new ArrayList<>();
+            for (String splitPerm : splitPerms) {
+                perms.add(Integer.parseInt(splitPerm));
+            }
+            permutations.add(perms);
         }
         return null;
     }
