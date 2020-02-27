@@ -120,25 +120,6 @@ public class Main extends Application {
         selectedTile.getChildren().add(0, label);
     }
 
-    // A recursive algorithm to find every permutations of an array.
-    public ArrayList<Integer> heapsAlgorithm(int size, ArrayList<Integer> cageValues) {
-        if (size == 1) {
-            System.out.println(cageValues);
-            return cageValues;
-        } else {
-            for (int i = 0; i < size; i++) {
-                heapsAlgorithm(size - 1, cageValues);
-
-                if (size % 2 == 0) {
-                    Collections.swap(cageValues, i, size - 1);
-                } else {
-                    Collections.swap(cageValues, 0, size - 1);
-                }
-            }
-        }
-        return null;
-    }
-
     // Event handler code for click a tile.
     class TileClickHandler implements EventHandler<MouseEvent> {
         private Tile tile;
@@ -247,6 +228,7 @@ public class Main extends Application {
                 }
                 int expectedHash = Arrays.hashCode(expectedTiles);
 
+                /*
                 // Check rows if correct.
                 for (int i = 0; i < gridSize; i++) {
                     ArrayList<Tile> rowTiles = new ArrayList<>(tiles.subList((i * gridSize), ((i + 1) * gridSize)));
@@ -283,7 +265,7 @@ public class Main extends Application {
                         correct = false;
                         break;
                     }
-                }
+                }*/
 
                 // Checks cages if correct.
                 for (Cage cage : cages) {
@@ -292,13 +274,18 @@ public class Main extends Application {
                     for (Tile tile : cage.getCageTiles()) {
                         cageValues.add(tile.getValue());
                     }
+
                     int givenResult = 0;
+                    int expectedResult = cage.getResult();
 
                     switch(cage.getOperation()) {
                         // Add values.
                         case "+":
                             for (int tileValue : cageValues) {
                                 givenResult += tileValue;
+                            }
+                            if (givenResult != expectedResult) {
+                                correct = false;
                             }
                             break;
                         // Multiply values.
@@ -307,23 +294,34 @@ public class Main extends Application {
                             for (int tileValue : cageValues) {
                                 givenResult = givenResult * tileValue;
                             }
+                            if (givenResult != expectedResult) {
+                                correct = false;
+                            }
                             break;
-                        // Minus values. HEAPS ALGORITHM
+                        // Minus values.
                         case "-":
-                            heapsAlgorithm(cageValues.size(), cageValues);
+                            // Creates a class to check cage mistakes.
+                            CageMistake cageMistake = new CageMistake();
+                            cageMistake.heapsAlgorithm(cageValues.size(), cageValues);
+
+                            //correct = cageMistake.subtractValues(expectedResult);
                             break;
-                        /*
+                            /*
                         // Divide values. HEAPS ALGORITHM
                         case "÷":
+                            ArrayList<Integer> divPerms = heapsAlgorithm(false, cageValues.size(), new ArrayList<>(), cageValues);
+                            found = false;
+                            for (int divPerm : divPerms) {
+                                if (divPerm == expectedResult) {
+                                    System.out.println(expectedResult + "," + divPerm);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                correct = false;
+                            }
                             break;*/
-                        // TEMPORARY - whilst working on subtract and divide.
-                        default:
-                            givenResult = cage.getResult();
-                            break;
-                    }
-                    if (givenResult != cage.getResult() || !correct) {
-                        correct = false;
-                        break;
                     }
                 }
 
