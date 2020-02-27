@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Scanner;
 
 public class Main extends Application {
@@ -220,58 +219,26 @@ public class Main extends Application {
         public void handle(MouseEvent event) {
             if (mistakeCheck.isSelected()) {
                 boolean correct = true;
-
-                // Creates the expected hash.
-                int[] expectedTiles = new int[gridSize];
-                for (int i = 0; i < gridSize; i++) {
-                    expectedTiles[i] = i + 1;
-                }
-                int expectedHash = Arrays.hashCode(expectedTiles);
-
-                // Check rows if correct.
-                for (int i = 0; i < gridSize; i++) {
-                    ArrayList<Tile> rowTiles = new ArrayList<>(tiles.subList((i * gridSize), ((i + 1) * gridSize)));
-
-                    // Gets values of the row.
-                    int[] actualRow = new int[rowTiles.size()];
-                    for (int j = 0; j < actualRow.length; j++) {
-                        actualRow[j] = rowTiles.get(j).getValue();
-                    }
-                    Arrays.sort(actualRow);
-
-                    // Checks if the hashes match.
-                    if (Arrays.hashCode(actualRow) != expectedHash) {
-                        correct = false;
-                        break;
-                    }
-                }
-
-                // Checks columns if correct.
-                for (int i = 0; i < gridSize; i++) {
-                    // Gets the arrays of columns.
-                    int[] actualColumn = new int[gridSize];
-                    int count = 0;
-                    for (Tile columnTile : tiles) {
-                        if ((columnTile.getGridPosition() - 1) % gridSize == i) {
-                            actualColumn[count] = columnTile.getValue();
-                            count++;
-                        }
-                    }
-                    Arrays.sort(actualColumn);
-
-                    // Checks if the hashes match.
-                    if (Arrays.hashCode(actualColumn) != expectedHash) {
-                        correct = false;
-                        break;
-                    }
-                }
+                boolean zeroError = false;
 
                 // Checks cages if correct.
                 for (Cage cage : cages) {
                     // Creates an array list of all values.
                     ArrayList<Integer> cageValues = new ArrayList<>();
                     for (Tile tile : cage.getCageTiles()) {
-                        cageValues.add(tile.getValue());
+                        if (tile.getValue() != 0) {
+                            cageValues.add(tile.getValue());
+                        } else {
+                          zeroError = true;
+                        }
+                    }
+
+                    // Stops checking this cage if it contains an empty tile.
+                    if (zeroError) {
+                        for (Tile tile : cage.getCageTiles()) {
+                            tile.mistakeTile();
+                        }
+                        continue;
                     }
 
                     int givenResult = 0;
@@ -317,6 +284,51 @@ public class Main extends Application {
                                 correct = false;
                             }
                             break;
+                    }
+                }
+
+                // Creates the expected hash.
+                int[] expectedTiles = new int[gridSize];
+                for (int i = 0; i < gridSize; i++) {
+                    expectedTiles[i] = i + 1;
+                }
+                int expectedHash = Arrays.hashCode(expectedTiles);
+
+                // Check rows if correct.
+                for (int i = 0; i < gridSize; i++) {
+                    ArrayList<Tile> rowTiles = new ArrayList<>(tiles.subList((i * gridSize), ((i + 1) * gridSize)));
+
+                    // Gets values of the row.
+                    int[] actualRow = new int[rowTiles.size()];
+                    for (int j = 0; j < actualRow.length; j++) {
+                        actualRow[j] = rowTiles.get(j).getValue();
+                    }
+                    Arrays.sort(actualRow);
+
+                    // Checks if the hashes match.
+                    if (Arrays.hashCode(actualRow) != expectedHash) {
+                        correct = false;
+                        break;
+                    }
+                }
+
+                // Checks columns if correct.
+                for (int i = 0; i < gridSize; i++) {
+                    // Gets the arrays of columns.
+                    int[] actualColumn = new int[gridSize];
+                    int count = 0;
+                    for (Tile columnTile : tiles) {
+                        if ((columnTile.getGridPosition() - 1) % gridSize == i) {
+                            actualColumn[count] = columnTile.getValue();
+                            count++;
+                        }
+                    }
+                    Arrays.sort(actualColumn);
+
+                    // Checks if the hashes match.
+                    if (Arrays.hashCode(actualColumn) != expectedHash) {
+                        correct = false;
+                        break;
                     }
                 }
 

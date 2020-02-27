@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -50,7 +49,7 @@ public class CageMistake {
         return null;
     }
 
-    // Subtracts the values of the array list.
+    // Subtracts the values of the array list, finding every value permutation.
     public boolean subtractValues(int expectedValue) {
         ArrayList<Integer> subtractPermutations = new ArrayList<>();
 
@@ -72,7 +71,7 @@ public class CageMistake {
         return false;
     }
 
-    // Divides the values of the array list.
+    // Divides the values of the array list, finding every value permutation.
     public boolean divideValues(int expectedValue) {
         ArrayList<Integer> dividePermutations = new ArrayList<>();
 
