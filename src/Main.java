@@ -228,7 +228,6 @@ public class Main extends Application {
                 }
                 int expectedHash = Arrays.hashCode(expectedTiles);
 
-                /*
                 // Check rows if correct.
                 for (int i = 0; i < gridSize; i++) {
                     ArrayList<Tile> rowTiles = new ArrayList<>(tiles.subList((i * gridSize), ((i + 1) * gridSize)));
@@ -265,7 +264,7 @@ public class Main extends Application {
                         correct = false;
                         break;
                     }
-                }*/
+                }
 
                 // Checks cages if correct.
                 for (Cage cage : cages) {
@@ -301,27 +300,23 @@ public class Main extends Application {
                         // Minus values.
                         case "-":
                             // Creates a class to check cage mistakes.
-                            CageMistake cageMistake = new CageMistake();
-                            cageMistake.heapsAlgorithm(cageValues.size(), cageValues);
+                            CageMistake subMistake = new CageMistake();
+                            subMistake.heapsAlgorithm(cageValues.size(), cageValues);
 
-                            //correct = cageMistake.subtractValues(expectedResult);
-                            break;
-                            /*
-                        // Divide values. HEAPS ALGORITHM
-                        case "÷":
-                            ArrayList<Integer> divPerms = heapsAlgorithm(false, cageValues.size(), new ArrayList<>(), cageValues);
-                            found = false;
-                            for (int divPerm : divPerms) {
-                                if (divPerm == expectedResult) {
-                                    System.out.println(expectedResult + "," + divPerm);
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (!found) {
+                            if (!subMistake.subtractValues(expectedResult)) {
                                 correct = false;
                             }
-                            break;*/
+                            break;
+                        // Divide values.
+                        case "÷":
+                            // Creates a class to check cage mistakes.
+                            CageMistake divMistake = new CageMistake();
+                            divMistake.heapsAlgorithm(cageValues.size(), cageValues);
+
+                            if (!divMistake.divideValues(expectedResult)) {
+                                correct = false;
+                            }
+                            break;
                     }
                 }
 
