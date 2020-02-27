@@ -66,12 +66,12 @@ public class Main extends Application {
         // Fills the grid with tiles.
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
-                Tile tile = new Tile((x + 1) + (y * gridSize));
+                Tile tile = new Tile((x * gridSize) + (y + 1));
                 tile.setPrefSize(tileSize, tileSize);
                 tile.setDefault();
-                tiles.add(tile);
+                tiles.add((x * gridSize) + y, tile);
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, tiles));
-                gridPane.add(tile, x, y);
+                gridPane.add(tile, y, x);
             }
 
             // Adds number buttons to below the grid.
@@ -81,6 +81,7 @@ public class Main extends Application {
             numButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new NumberButtonHandler(x + 1, tiles));
             buttonHBox.getChildren().add(numButton);
         }
+
         // Reads in the cages for the example grid - TEMPORARY CODE
         Scanner reader = new Scanner(new File("example.txt"));
         while (reader.hasNextLine()) {
@@ -291,7 +292,7 @@ public class Main extends Application {
                             }
                             break;
                         // Minus values.
-                        case "-":
+                        /*case "-":
                             for (int i = 0; i < factorial(cage.getCageTiles().size()); i++) {
                                 for (Tile tile : cage.getCageTiles()) {
                                     givenResult -= tile.getValue();
@@ -302,11 +303,16 @@ public class Main extends Application {
                         case "÷":
                             for (Tile tile : cage.getCageTiles()) {
                                 givenResult = tile.getValue();
+                                ArrayList<Tile> divCage = cage.getCageTiles();
+                                divCage.remove(tile);
                             }
+                            break;*/
+                        default:
                             break;
                     }
                     if (givenResult != cage.getResult()) {
                         correct = false;
+                        break;
                     }
                 }
 
@@ -325,7 +331,7 @@ public class Main extends Application {
         try {
             launch(args);
         } catch (Exception e) {
-            System.out.println("Error: " + e);
+            System.out.println(e);
         }
     }
 }

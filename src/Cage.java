@@ -4,6 +4,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 // The class for a cage on the grid.
 public class Cage {
@@ -22,21 +23,20 @@ public class Cage {
 
         // Finds the tiles that belong to the cage.
         String[] tilePositions = cageDefinition.substring(cageSplit + 1).split(",");
+        System.out.println(Arrays.toString(tilePositions));
         this.cageTiles = new ArrayList<>();
         for (String tilePosition : tilePositions) {
             cageTiles.add(tiles.get(Integer.parseInt(tilePosition) - 1));
+        }
+        for (Tile cageTile : cageTiles) {
+            System.out.println(cageTile.getGridPosition());
         }
     }
 
     // Shows the cage on the grid.
     public void showCage() {
         // Gets the top left most tile.
-        Tile firstTile = new Tile(100);
-        for (Tile cageTile : cageTiles) {
-            if (cageTile.getGridPosition() < firstTile.getGridPosition()) {
-                firstTile = cageTile;
-            }
-        }
+        Tile firstTile = cageTiles.get(0);
 
         // Displays the cage requirement.
         Label label = new Label(result + "," + operation);
