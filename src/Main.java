@@ -218,130 +218,17 @@ public class Main extends Application {
         @Override
         public void handle(MouseEvent event) {
             if (mistakeCheck.isSelected()) {
-                boolean correct = true;
-
-                // Checks cages if correct.
-                for (Cage cage : cages) {
-                    boolean zeroError = false;
-
-                    // Creates an array list of all values.
-                    ArrayList<Integer> cageValues = new ArrayList<>();
-                    for (Tile tile : cage.getCageTiles()) {
-                        if (tile.getValue() != 0) {
-                            cageValues.add(tile.getValue());
-                        } else {
-                            zeroError = true;
-                        }
-                    }
-
-                    // Skips to the next cage.
-                    if (zeroError) {
-                        for (Tile tile : cage.getCageTiles()) {
-                            tile.mistakeTile();
-                        }
-                        continue;
-                    } else {
-                        for (Tile tile : cage.getCageTiles()) {
-                            tile.correctTile();
-                        }
-                    }
-
-                    int givenResult = 0;
-                    int expectedResult = cage.getResult();
-
-                    switch(cage.getOperation()) {
-                        // Add values.
-                        case "+":
-                            for (int tileValue : cageValues) {
-                                givenResult += tileValue;
-                            }
-                            if (givenResult != expectedResult) {
-                                correct = false;
-                            }
-                            break;
-                        // Multiply values.
-                        case "x":
-                            givenResult = 1;
-                            for (int tileValue : cageValues) {
-                                givenResult = givenResult * tileValue;
-                            }
-                            if (givenResult != expectedResult) {
-                                correct = false;
-                            }
-                            break;
-                        // Minus values.
-                        case "-":
-                            // Creates a class to check cage mistakes.
-                            CageMistake subMistake = new CageMistake();
-                            subMistake.heapsAlgorithm(cageValues.size(), cageValues);
-
-                            if (!subMistake.subtractValues(expectedResult)) {
-                                correct = false;
-                            }
-                            break;
-                        // Divide values.
-                        case "÷":
-                            // Creates a class to check cage mistakes.
-                            CageMistake divMistake = new CageMistake();
-                            divMistake.heapsAlgorithm(cageValues.size(), cageValues);
-
-                            if (!divMistake.divideValues(expectedResult)) {
-                                correct = false;
-                            }
-                            break;
-                    }
-                }
-
-                // Creates the expected hash.
-                int[] expectedTiles = new int[gridSize];
-                for (int i = 0; i < gridSize; i++) {
-                    expectedTiles[i] = i + 1;
-                }
-                int expectedHash = Arrays.hashCode(expectedTiles);
-
-                // Check rows if correct.
-                for (int i = 0; i < gridSize; i++) {
-                    ArrayList<Tile> rowTiles = new ArrayList<>(tiles.subList((i * gridSize), ((i + 1) * gridSize)));
-
-                    // Gets values of the row.
-                    int[] actualRow = new int[rowTiles.size()];
-                    for (int j = 0; j < actualRow.length; j++) {
-                        actualRow[j] = rowTiles.get(j).getValue();
-                    }
-                    Arrays.sort(actualRow);
-
-                    // Checks if the hashes match.
-                    if (Arrays.hashCode(actualRow) != expectedHash) {
-                        correct = false;
-                        break;
-                    }
-                }
-
-                // Checks columns if correct.
-                for (int i = 0; i < gridSize; i++) {
-                    // Gets the arrays of columns.
-                    int[] actualColumn = new int[gridSize];
-                    int count = 0;
-                    for (Tile columnTile : tiles) {
-                        if ((columnTile.getGridPosition() - 1) % gridSize == i) {
-                            actualColumn[count] = columnTile.getValue();
-                            count++;
-                        }
-                    }
-                    Arrays.sort(actualColumn);
-
-                    // Checks if the hashes match.
-                    if (Arrays.hashCode(actualColumn) != expectedHash) {
-                        correct = false;
-                        break;
-                    }
-                }
+                CheckMistake checkMistake = new CheckMistake(gridSize, tiles, cages);
 
                 // Tells the user if they have won or not.
-                if (correct) {
+                if (checkMistake.checkGrid()) {
                     System.out.println("You've won!");
                 } else {
                     System.out.println("There are some mistakes...");
+                }
+            } else {
+                for (Tile tile : tiles) {
+                    tile.correctTile();
                 }
             }
         }
