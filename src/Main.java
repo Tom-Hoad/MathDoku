@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main extends Application {
@@ -70,7 +69,7 @@ public class Main extends Application {
                 tile.setPrefSize(tileSize, tileSize);
                 tile.setDefault();
                 tiles.add((x * gridSize) + y, tile);
-                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, tiles));
+                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, tiles, mistakesCheck));
                 gridPane.add(tile, y, x);
             }
 
@@ -123,10 +122,12 @@ public class Main extends Application {
     class TileClickHandler implements EventHandler<MouseEvent> {
         private Tile tile;
         private ArrayList<Tile> tiles;
+        private CheckBox mistakeCheck;
 
-        public TileClickHandler(Tile tile, ArrayList<Tile> tiles) {
+        public TileClickHandler(Tile tile, ArrayList<Tile> tiles, CheckBox mistakeCheck) {
             this.tile = tile;
             this.tiles = tiles;
+            this.mistakeCheck = mistakeCheck;
         }
 
         @Override

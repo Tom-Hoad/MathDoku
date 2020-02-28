@@ -4,7 +4,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 // The class for a cage on the grid.
 public class Cage {
