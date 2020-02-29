@@ -14,7 +14,7 @@ public class Tile extends StackPane implements Comparable<Tile> {
     public Tile(int gridPosition) {
         this.gridPosition = gridPosition;
         this.getChildren().add(0, new Label(""));
-        this.style = "-fx-border-color: black; -fx-background-color: white; ";
+        this.style = "-fx-border-color: black; ";
         this.value = 0;
     }
 

@@ -7,14 +7,14 @@ import java.util.ArrayList;
 
 // The class for a cage on the grid.
 public class Cage {
-    private int gridSize;
+    private Grid grid;
     private int result;
     private String operation;
     private ArrayList<Tile> cageTiles;
 
     // The cage class constructor.
-    public Cage(int gridSize, String cageDefinition, ArrayList<Tile> tiles) {
-        this.gridSize = gridSize;
+    public Cage(Grid grid, String cageDefinition) {
+        this.grid = grid;
 
         int cageSplit = cageDefinition.indexOf(" ");
         this.result = Integer.parseInt(cageDefinition.substring(0, cageSplit - 1));

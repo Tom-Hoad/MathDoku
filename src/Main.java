@@ -52,19 +52,12 @@ public class Main extends Application {
         int gridSize = 6;
         int tileSize = 100;
 
-        // Creates an array list of all tiles, rows, columns and cages.
-        ArrayList<Tile> tiles = new ArrayList<>();
-        ArrayList<Row> rows = new ArrayList<>();
-        ArrayList<Column> columns = new ArrayList<>();
-        ArrayList<Cage> cages = new ArrayList<>();
-        mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize, tiles, cages, mistakesCheck));
-        mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(gridSize, tiles, cages, mistakesCheck));
+        // Creates an object for the grid.
+        Grid grid = new Grid(gridSize, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
-        // Populates rows and columns.
-        for (int i = 0; i < gridSize; i++) {
-            rows.add(new Row(new ArrayList<>()));
-            columns.add(new Column(new ArrayList<>()));
-        }
+        // Adds event handlers for numbering and selecting tiles.
+        mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(grid, mistakesCheck));
+        mainPane.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(grid, mistakesCheck));
 
         // Creates the grid pane.
         GridPane gridPane = new GridPane();
@@ -72,37 +65,33 @@ public class Main extends Application {
         gridPane.setVgap(1);
 
         // Fills the grid with tiles.
-        for (int x = 0; x < gridSize; x++) {
-            for (int y = 0; y < gridSize; y++) {
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
                 // Styles the tile.
-                Tile tile = new Tile((x * gridSize) + (y + 1));
+                Tile tile = new Tile((i * gridSize) + (j + 1));
                 tile.setPrefSize(tileSize, tileSize);
                 tile.setDefault();
 
-                // Adds the tile to categories.
-                tiles.add((x * gridSize) + y, tile);
-                rows.get(y).addTo(tile);
-                columns.get(x).addTo(tile);
-
                 // Adds the tile to the grid.
-                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(gridSize, tile, tiles, cages, mistakesCheck));
-                gridPane.add(tile, y, x);
+                grid.addToRow(j, tile);
+                grid.addToColumn(i, tile);
+                gridPane.add(tile, j, i);
+
+                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, mistakesCheck));
             }
 
             // Adds number buttons to below the grid.
-            Button numButton = new Button(String.valueOf(x + 1));
+            Button numButton = new Button(String.valueOf(i + 1));
             numButton.setPrefSize(50, 50);
             numButton.setFont(new Font(30));
-            numButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new NumberButtonHandler(gridSize, x + 1, tiles, cages, mistakesCheck));
+            numButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new NumberButtonHandler(String.valueOf(i + 1), grid, mistakesCheck));
             buttonHBox.getChildren().add(numButton);
         }
 
         // Reads in the cages for the example grid - TEMPORARY CODE
         Scanner reader = new Scanner(new File("example.txt"));
         while (reader.hasNextLine()) {
-            Cage cage = new Cage(gridSize, reader.nextLine(), tiles);
-            cage.showCage();
-            cages.add(cage);
+            grid.addCage(new Cage(grid, reader.nextLine()));
         }
 
         // Finishes setting up the GUI.
