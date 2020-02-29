@@ -110,6 +110,10 @@ public class CheckMistake {
 
             // Checks if the hashes match.
             if (Arrays.hashCode(actualRow) != expectedHash) {
+                // Marks the row as incorrect.
+                for (Tile rowTile : rowTiles) {
+                    rowTile.mistakeTile();
+                }
                 correct = false;
                 break;
             }
@@ -118,11 +122,13 @@ public class CheckMistake {
         // Checks columns if correct.
         for (int i = 0; i < gridSize; i++) {
             // Gets the arrays of columns.
+            ArrayList<Tile> columnTiles = new ArrayList<>();
             int[] actualColumn = new int[gridSize];
             int count = 0;
             for (Tile columnTile : tiles) {
                 if ((columnTile.getGridPosition() - 1) % gridSize == i) {
                     actualColumn[count] = columnTile.getValue();
+                    columnTiles.add(columnTile);
                     count++;
                 }
             }
@@ -130,6 +136,10 @@ public class CheckMistake {
 
             // Checks if the hashes match.
             if (Arrays.hashCode(actualColumn) != expectedHash) {
+                // Marks the column as incorrect.
+                for (Tile columnTile : columnTiles) {
+                    columnTile.mistakeTile();
+                }
                 correct = false;
                 break;
             }
