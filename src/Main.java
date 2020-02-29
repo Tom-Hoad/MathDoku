@@ -126,16 +126,12 @@ public class Main extends Application {
     }
 
     // Adds a number to the tile.
-    public void displayNumber(int gridSize, String number, Tile selectedTile, ArrayList<Tile> tiles, ArrayList<Cage> cages, CheckBox mistakesCheck) {
-        selectedTile.getChildren().remove(0);
-        selectedTile.setValue(Integer.parseInt(number));
-        Label label = new Label(number);
-        label.setFont(new Font(50));
-        selectedTile.getChildren().add(0, label);
+    public void displayNumber(int gridSize, String number, Tile selectedTile, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages, CheckBox mistakesCheck) {
+        selectedTile.displayValue(number);
 
         // Checks for mistakes.
         if (mistakesCheck.isSelected()) {
-            CheckMistake checkMistake = new CheckMistake(gridSize, tiles, cages);
+            CheckMistake checkMistake = new CheckMistake(gridSize, rows, columns, cages);
 
             // Tells the user if they have won or not.
             if (checkMistake.checkGrid()) {
@@ -169,7 +165,7 @@ public class Main extends Application {
             try {
                 // Checks for mistakes.
                 if (mistakesCheck.isSelected()) {
-                    CheckMistake checkMistake = new CheckMistake(gridSize, tiles, cages);
+                    CheckMistake checkMistake = new CheckMistake(gridSize, rows, columns, cages);
 
                     // Tells the user if they have won or not.
                     if (checkMistake.checkGrid()) {
@@ -212,7 +208,7 @@ public class Main extends Application {
                 if (key != KeyCode.BACK_SPACE) {
                     for (int i = 0; i <= gridSize - 1; i++) {
                         if (key == codes[i]) {
-                            displayNumber(gridSize, key.toString().substring(5), getSelected(tiles), tiles, cages, mistakesCheck);
+                            displayNumber(gridSize, key.toString().substring(5), getSelected(tiles), gridSize, rows, columns, cages, mistakesCheck);
                         }
                     }
                 } else {
@@ -232,14 +228,16 @@ public class Main extends Application {
     class NumberButtonHandler implements EventHandler<MouseEvent> {
         private int gridSize;
         private int number;
-        private ArrayList<Tile> tiles;
+        private ArrayList<Row> rows;
+        private ArrayList<Column> columns;
         private ArrayList<Cage> cages;
         private CheckBox mistakesCheck;
 
-        public NumberButtonHandler(int gridSize, int number, ArrayList<Tile> tiles, ArrayList<Cage> cages, CheckBox mistakesCheck) {
+        public NumberButtonHandler(int gridSize, int number, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages, CheckBox mistakesCheck) {
             this.gridSize = gridSize;
             this.number = number;
-            this.tiles = tiles;
+            this.rows = rows;
+            this.columns = columns;
             this.cages = cages;
             this.mistakesCheck = mistakesCheck;
         }
@@ -248,7 +246,7 @@ public class Main extends Application {
         public void handle(MouseEvent event) {
             // Displays the number on the tile.
             try {
-                displayNumber(gridSize, String.valueOf(number), getSelected(tiles), tiles, cages, mistakesCheck);
+                displayNumber(gridSize, String.valueOf(number), getSelected(tiles), gridSize, rows, columns, cages, mistakesCheck);
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
             }
@@ -258,13 +256,15 @@ public class Main extends Application {
     // The event handler for selecting to check the mistakes.
     class MistakeCheckHandler implements EventHandler<MouseEvent> {
         private int gridSize;
-        private ArrayList<Tile> tiles;
+        private ArrayList<Row> rows;
+        private ArrayList<Column> columns;
         private ArrayList<Cage> cages;
         private CheckBox mistakesCheck;
 
-        public MistakeCheckHandler(int gridSize, ArrayList<Tile> tiles, ArrayList<Cage> cages, CheckBox mistakesCheck) {
+        public MistakeCheckHandler(int gridSize, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages, CheckBox mistakesCheck) {
             this.gridSize = gridSize;
-            this.tiles = tiles;
+            this.rows = rows;
+            this.columns = columns;
             this.cages = cages;
             this.mistakesCheck = mistakesCheck;
         }
@@ -272,7 +272,7 @@ public class Main extends Application {
         @Override
         public void handle(MouseEvent event) {
             if (mistakesCheck.isSelected()) {
-                CheckMistake checkMistake = new CheckMistake(gridSize, tiles, cages);
+                CheckMistake checkMistake = new CheckMistake(gridSize, rows, columns, cages);
 
                 // Tells the user if they have won or not.
                 if (checkMistake.checkGrid()) {
@@ -280,11 +280,8 @@ public class Main extends Application {
                 } else {
                     System.out.println("There are some mistakes...");
                 }
-            } else {
-                for (Tile tile : tiles) {
-                    tile.correctTile();
-                }
             }
+            // NEEDS TO CORRECT EVERYTHING
         }
     }
 

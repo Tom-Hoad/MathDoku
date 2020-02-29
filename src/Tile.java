@@ -1,5 +1,6 @@
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 
 // The subclass for a single tile in the grid.
 public class Tile extends StackPane implements Comparable<Tile> {
@@ -60,6 +61,15 @@ public class Tile extends StackPane implements Comparable<Tile> {
     // Gets the tile value.
     public int getValue() {
         return value;
+    }
+
+    // Displays the value.
+    public void displayValue(String number) {
+        getChildren().remove(0);
+        setValue(Integer.parseInt(number));
+        Label label = new Label(number);
+        label.setFont(new Font(50));
+        getChildren().add(0, label);
     }
 
     // Sets the tile value.
