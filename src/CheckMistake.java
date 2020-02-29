@@ -1,17 +1,21 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class CheckMistake {
     private int gridSize;
-    private ArrayList<Tile> tiles;
+    private ArrayList<Row> rows;
+    private ArrayList<Column> columns;
     private ArrayList<Cage> cages;
     private ArrayList<String> strPermutations;
     private ArrayList<ArrayList<Integer>> permutations;
 
-    public CheckMistake(int gridSize, ArrayList<Tile> tiles, ArrayList<Cage> cages) {
+    public CheckMistake(int gridSize, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages) {
         this.gridSize = gridSize;
-        this.tiles = tiles;
+        this.rows = rows;
+        this.columns = columns;
         this.cages = cages;
         this.strPermutations = new ArrayList<>();
         this.permutations = new ArrayList<>();
@@ -98,50 +102,42 @@ public class CheckMistake {
         int expectedHash = Arrays.hashCode(expectedTiles);
 
         // Check rows if correct.
-        for (int i = 0; i < gridSize; i++) {
-            ArrayList<Tile> rowTiles = new ArrayList<>(tiles.subList((i * gridSize), ((i + 1) * gridSize)));
+        for (Row row : rows) {
+            ArrayList<Tile> rowTiles = row.getRowTiles();
 
-            // Gets values of the row.
-            int[] actualRow = new int[rowTiles.size()];
-            for (int j = 0; j < actualRow.length; j++) {
-                actualRow[j] = rowTiles.get(j).getValue();
+            int[] rowValues = new int[rowTiles.size()];
+            for (int i = 0; i < rowValues.length; i++) {
+                rowValues[i] = rowTiles.get(i).getValue();
             }
-            Arrays.sort(actualRow);
+            Arrays.sort(rowValues);
 
             // Checks if the hashes match.
-            if (Arrays.hashCode(actualRow) != expectedHash) {
+            if (Arrays.hashCode(rowValues) != expectedHash) {
                 // Marks the row as incorrect.
                 for (Tile rowTile : rowTiles) {
                     rowTile.mistakeTile();
                 }
                 correct = false;
-                break;
             }
         }
 
         // Checks columns if correct.
-        for (int i = 0; i < gridSize; i++) {
-            // Gets the arrays of columns.
-            ArrayList<Tile> columnTiles = new ArrayList<>();
-            int[] actualColumn = new int[gridSize];
-            int count = 0;
-            for (Tile columnTile : tiles) {
-                if ((columnTile.getGridPosition() - 1) % gridSize == i) {
-                    actualColumn[count] = columnTile.getValue();
-                    columnTiles.add(columnTile);
-                    count++;
-                }
+        for (Column column : columns) {
+            ArrayList<Tile> columnTiles = column.getColumnTiles();
+
+            int[] columnValues = new int[columnTiles.size()];
+            for (int i = 0; i < columnValues.length; i++) {
+                columnValues[i] = columnTiles.get(i).getValue();
             }
-            Arrays.sort(actualColumn);
+            Arrays.sort(columnValues);
 
             // Checks if the hashes match.
-            if (Arrays.hashCode(actualColumn) != expectedHash) {
-                // Marks the column as incorrect.
+            if (Arrays.hashCode(columnValues) != expectedHash) {
+                // Marks the row as incorrect.
                 for (Tile columnTile : columnTiles) {
                     columnTile.mistakeTile();
                 }
                 correct = false;
-                break;
             }
         }
         return correct;
@@ -168,13 +164,14 @@ public class CheckMistake {
         return null;
     }
 
-    // Converts the array list of string permutations to an array list of an array list of integers of permutations.
+    // Converts the type of permutations. Used to overcome recursive complications.
     private ArrayList<ArrayList<Integer>> splitPermutations() {
         for (String strPermutation : strPermutations) {
+            // Makes an array of string permutations.
             strPermutation = strPermutation.substring(1, strPermutation.length() - 1);
             String[] splitPerms = strPermutation.split(", ");
 
-
+            // Converts the strings and stores them as integers.
             ArrayList<Integer> perms = new ArrayList<>();
             for (String splitPerm : splitPerms) {
                 perms.add(Integer.parseInt(splitPerm));

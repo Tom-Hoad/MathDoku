@@ -2,7 +2,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
 // The subclass for a single tile in the grid.
-public class Tile extends StackPane {
+public class Tile extends StackPane implements Comparable<Tile> {
     private int gridPosition;
     private boolean selected;
     private String style;
@@ -65,5 +65,11 @@ public class Tile extends StackPane {
     // Sets the tile value.
     public void setValue(int value) {
         this.value = value;
+    }
+
+    // Compares the value of two tiles.
+    @Override
+    public int compareTo(Tile tile) {
+        return Integer.compare(getValue(), tile.getValue());
     }
 }
