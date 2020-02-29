@@ -57,7 +57,7 @@ public class Main extends Application {
 
         // Adds event handlers for numbering and selecting tiles.
         mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(grid, mistakesCheck));
-        mainPane.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(grid, mistakesCheck));
+        mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(grid, mistakesCheck));
 
         // Creates the grid pane.
         GridPane gridPane = new GridPane();
@@ -77,7 +77,7 @@ public class Main extends Application {
                 grid.addToColumn(i, tile);
                 gridPane.add(tile, j, i);
 
-                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(grid, tile, mistakesCheck));
+                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(grid, tile));
             }
 
             // Adds number buttons to below the grid.
@@ -128,27 +128,15 @@ public class Main extends Application {
     class TileClickHandler implements EventHandler<MouseEvent> {
         private Grid grid;
         private Tile tile;
-        private CheckBox mistakesCheck;
 
-        public TileClickHandler(Grid grid, Tile tile, CheckBox mistakesCheck) {
+        public TileClickHandler(Grid grid, Tile tile) {
             this.grid = grid;
             this.tile = tile;
-            this.mistakesCheck = mistakesCheck;
         }
 
         @Override
         public void handle(MouseEvent event) {
             try {
-                // Checks for mistakes.
-                if (mistakesCheck.isSelected()) {
-                    CheckMistake checkMistake = new CheckMistake(grid);
-
-                    // Tells the user if they have won or not.
-                    if (checkMistake.checkGrid()) {
-                        System.out.println("You've won!");
-                    }
-                }
-
                 // Defaults the selected tile and selects the new tile.
                 grid.getSelected().setDefault();
                 grid.selectTile(tile);
@@ -230,6 +218,7 @@ public class Main extends Application {
 
         @Override
         public void handle(MouseEvent event) {
+            // Checks mistake.
             if (mistakesCheck.isSelected()) {
                 CheckMistake checkMistake = new CheckMistake(grid);
 
@@ -239,8 +228,12 @@ public class Main extends Application {
                 } else {
                     System.out.println("There are some mistakes...");
                 }
+            } else {
+                for (Tile tile : grid.getTiles()) {
+                    tile.correctTile();
+                }
             }
-            // NEEDS TO CORRECT EVERYTHING
+            grid.selectTile(grid.getSelected());
         }
     }
 

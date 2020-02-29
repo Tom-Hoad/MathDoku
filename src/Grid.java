@@ -43,8 +43,8 @@ public class Grid {
 
     // Finds all the tiles in the grid.
     public void findTiles() {
-        for (Row row : rows) {
-            tiles.addAll(row.getRowTiles());
+        for (Column column : columns) {
+            tiles.addAll(column.getColumnTiles());
         }
     }
 

@@ -5,7 +5,6 @@ import javafx.scene.text.Font;
 // The subclass for a single tile in the grid.
 public class Tile extends StackPane implements Comparable<Tile> {
     private int gridPosition;
-    private boolean selected;
     private String style;
     private String border;
     private int value;
@@ -21,7 +20,6 @@ public class Tile extends StackPane implements Comparable<Tile> {
     // Defaults the tile.
     public void setDefault() {
         this.setStyle(style + border);
-        selected = false;
     }
 
     // Adds border to the tile.
@@ -32,8 +30,8 @@ public class Tile extends StackPane implements Comparable<Tile> {
 
     // Highlights the tile when selected.
     public void setSelected() {
-        this.setStyle("-fx-border-color: red; -fx-border-width: 4");
-        selected = true;
+        this.setStyle("-fx-border-color: red; -fx-border-width: 4; ");
+        System.out.println(getGridPosition());
     }
 
     // Highlights the tile when related to a mistake.
@@ -46,11 +44,6 @@ public class Tile extends StackPane implements Comparable<Tile> {
     public void correctTile() {
         this.style = "-fx-border-color: black; ";
         setDefault();
-    }
-
-    // Gets if the tile is selected.
-    public boolean isSelected() {
-        return selected;
     }
 
     // Gets the tile position in the grid.
