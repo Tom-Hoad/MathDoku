@@ -3,29 +3,25 @@ import java.util.ArrayList;
 // The class for a grid.
 public class Grid {
     private int size;
-    private ArrayList<Tile> tiles;
+    private Tile selectedTile;
     private ArrayList<Row> rows;
     private ArrayList<Column> columns;
     private ArrayList<Cage> cages;
+    private ArrayList<Tile> tiles;
 
     // The grid class constructor.
     public Grid(int size, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages) {
         this.size = size;
-        this.tiles = new ArrayList<>();
+        this.selectedTile = null;
         this.rows = rows;
         this.columns = columns;
         this.cages = cages;
+        this.tiles = new ArrayList<>();
 
         // Populates rows and columns.
         for (int i = 0; i < size; i++) {
             rows.add(new Row(new ArrayList<>()));
             columns.add(new Column(new ArrayList<>()));
-        }
-
-        // Finds all the tile in the grid.
-        this.tiles = new ArrayList<>();
-        for (Row row : rows) {
-            tiles.addAll(row.getRowTiles());
         }
     }
 
@@ -52,14 +48,20 @@ public class Grid {
         }
     }
 
+    // Selects a tile.
+    public void selectTile(Tile tile) {
+        this.selectedTile = tile;
+        tile.setSelected();
+    }
+
     // Gets the size of the grid.
     public int getSize() {
         return size;
     }
 
-    // Gets all the tiles in the grid.
-    public ArrayList<Tile> getTiles() {
-        return tiles;
+    // Gets the selected tile.
+    public Tile getSelected() {
+        return selectedTile;
     }
 
     // Gets all the rows in the grid.
@@ -75,5 +77,10 @@ public class Grid {
     // Gets all the cages in the grid.
     public ArrayList<Cage> getCages() {
         return cages;
+    }
+
+    // Gets all the tiles in the grid.
+    public ArrayList<Tile> getTiles() {
+        return tiles;
     }
 }

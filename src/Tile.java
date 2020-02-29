@@ -31,13 +31,13 @@ public class Tile extends StackPane implements Comparable<Tile> {
     }
 
     // Highlights the tile when selected.
-    public void selectTile() {
+    public void setSelected() {
         this.setStyle("-fx-border-color: red; -fx-border-width: 4");
         selected = true;
     }
 
     // Highlights the tile when related to a mistake.
-    public void mistakeTile() {
+    public void setMistake() {
         this.style = "-fx-border-color: black; -fx-background-color: lightpink; ";
         setDefault();
     }

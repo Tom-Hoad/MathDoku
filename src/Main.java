@@ -77,14 +77,14 @@ public class Main extends Application {
                 grid.addToColumn(i, tile);
                 gridPane.add(tile, j, i);
 
-                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, mistakesCheck));
+                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(grid, tile, mistakesCheck));
             }
 
             // Adds number buttons to below the grid.
             Button numButton = new Button(String.valueOf(i + 1));
             numButton.setPrefSize(50, 50);
             numButton.setFont(new Font(30));
-            numButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new NumberButtonHandler(String.valueOf(i + 1), grid, mistakesCheck));
+            numButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new NumberButtonHandler(grid, i + 1, mistakesCheck));
             buttonHBox.getChildren().add(numButton);
         }
         grid.findTiles();
@@ -105,19 +105,9 @@ public class Main extends Application {
         stage.show();
     }
 
-    // Returns the selected tile.
-    public Tile getSelected(Grid grid) {
-        for (Tile tile : grid.getTiles()) {
-            if (tile.isSelected()) {
-                return tile;
-            }
-        }
-        return null;
-    }
-
     // Adds a number to the tile.
     public void displayNumber(Grid grid, String number, CheckBox mistakesCheck) {
-        getSelected(grid).displayValue(number);
+        grid.getSelected().displayValue(number);
 
         // Checks for mistakes.
         if (mistakesCheck.isSelected()) {
@@ -130,7 +120,7 @@ public class Main extends Application {
                 System.out.println("There are some mistakes...");
             }
 
-            getSelected(grid).selectTile();
+            grid.selectTile(grid.getSelected());
         }
     }
 
@@ -151,7 +141,7 @@ public class Main extends Application {
             try {
                 // Checks for mistakes.
                 if (mistakesCheck.isSelected()) {
-                    CheckMistake checkMistake = new CheckMistake(grid, cages);
+                    CheckMistake checkMistake = new CheckMistake(grid);
 
                     // Tells the user if they have won or not.
                     if (checkMistake.checkGrid()) {
@@ -160,25 +150,21 @@ public class Main extends Application {
                 }
 
                 // Defaults the selected tile and selects the new tile.
-                getSelected(tiles).setDefault();
-                tile.selectTile();
+                grid.getSelected().setDefault();
+                grid.selectTile(tile);
             } catch (NullPointerException e) {
-                tile.selectTile();
+                grid.selectTile(tile);
             }
         }
     }
 
     // Event handler code for pressing a key.
     class KeyPressedHandler implements EventHandler<KeyEvent> {
-        private int gridSize;
-        private ArrayList<Tile> tiles;
-        private ArrayList<Cage> cages;
+        private Grid grid;
         private CheckBox mistakesCheck;
 
-        public KeyPressedHandler(int gridSize, ArrayList<Tile> tiles, ArrayList<Cage> cages, CheckBox mistakesCheck) {
-            this.gridSize = gridSize;
-            this.tiles = tiles;
-            this.cages = cages;
+        public KeyPressedHandler(Grid grid, CheckBox mistakesCheck) {
+            this.grid = grid;
             this.mistakesCheck = mistakesCheck;
         }
 
@@ -192,17 +178,16 @@ public class Main extends Application {
             // Displays the number on the tile.
             try {
                 if (key != KeyCode.BACK_SPACE) {
-                    for (int i = 0; i <= gridSize - 1; i++) {
+                    for (int i = 0; i <= grid.getSize() - 1; i++) {
                         if (key == codes[i]) {
-                            displayNumber(gridSize, key.toString().substring(5), getSelected(tiles), gridSize, rows, columns, cages, mistakesCheck);
+                            displayNumber(grid, key.toString().substring(5), mistakesCheck);
                         }
                     }
                 } else {
                     // Removes the value.
-                    Tile selectedTile = getSelected(tiles);
-                    selectedTile.setValue(0);
-                    selectedTile.getChildren().remove(0);
-                    selectedTile.getChildren().add(0, new Label(""));
+                    grid.getSelected().setValue(0);
+                    grid.getSelected().getChildren().remove(0);
+                    grid.getSelected().getChildren().add(0, new Label(""));
                 }
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
@@ -212,19 +197,13 @@ public class Main extends Application {
 
     // Event handler code for pressing a number button.
     class NumberButtonHandler implements EventHandler<MouseEvent> {
-        private int gridSize;
+        private Grid grid;
         private int number;
-        private ArrayList<Row> rows;
-        private ArrayList<Column> columns;
-        private ArrayList<Cage> cages;
         private CheckBox mistakesCheck;
 
-        public NumberButtonHandler(int gridSize, int number, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages, CheckBox mistakesCheck) {
-            this.gridSize = gridSize;
+        public NumberButtonHandler(Grid grid, int number, CheckBox mistakesCheck) {
+            this.grid = grid;
             this.number = number;
-            this.rows = rows;
-            this.columns = columns;
-            this.cages = cages;
             this.mistakesCheck = mistakesCheck;
         }
 
@@ -232,7 +211,7 @@ public class Main extends Application {
         public void handle(MouseEvent event) {
             // Displays the number on the tile.
             try {
-                displayNumber(gridSize, String.valueOf(number), getSelected(tiles), gridSize, rows, columns, cages, mistakesCheck);
+                displayNumber(grid, String.valueOf(number), mistakesCheck);
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
             }
@@ -241,24 +220,18 @@ public class Main extends Application {
 
     // The event handler for selecting to check the mistakes.
     class MistakeCheckHandler implements EventHandler<MouseEvent> {
-        private int gridSize;
-        private ArrayList<Row> rows;
-        private ArrayList<Column> columns;
-        private ArrayList<Cage> cages;
+        private Grid grid;
         private CheckBox mistakesCheck;
 
-        public MistakeCheckHandler(int gridSize, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages, CheckBox mistakesCheck) {
-            this.gridSize = gridSize;
-            this.rows = rows;
-            this.columns = columns;
-            this.cages = cages;
+        public MistakeCheckHandler(Grid grid, CheckBox mistakesCheck) {
+            this.grid = grid;
             this.mistakesCheck = mistakesCheck;
         }
 
         @Override
         public void handle(MouseEvent event) {
             if (mistakesCheck.isSelected()) {
-                CheckMistake checkMistake = new CheckMistake(gridSize, rows, columns, cages);
+                CheckMistake checkMistake = new CheckMistake(grid);
 
                 // Tells the user if they have won or not.
                 if (checkMistake.checkGrid()) {

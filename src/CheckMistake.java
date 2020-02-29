@@ -33,7 +33,7 @@ public class CheckMistake {
             // Skips to the next cage.
             if (zeroError) {
                 for (Tile tile : cage.getCageTiles()) {
-                    tile.mistakeTile();
+                    tile.setMistake();
                 }
                 continue;
             } else {
@@ -107,7 +107,7 @@ public class CheckMistake {
             if (Arrays.hashCode(rowValues) != expectedHash) {
                 // Marks the row as incorrect.
                 for (Tile rowTile : rowTiles) {
-                    rowTile.mistakeTile();
+                    rowTile.setMistake();
                 }
                 correct = false;
             }
@@ -127,7 +127,7 @@ public class CheckMistake {
             if (Arrays.hashCode(columnValues) != expectedHash) {
                 // Marks the row as incorrect.
                 for (Tile columnTile : columnTiles) {
-                    columnTile.mistakeTile();
+                    columnTile.setMistake();
                 }
                 correct = false;
             }
