@@ -31,7 +31,6 @@ public class Tile extends StackPane implements Comparable<Tile> {
     // Highlights the tile when selected.
     public void setSelected() {
         this.setStyle("-fx-border-color: red; -fx-border-width: 4; ");
-        System.out.println(getGridPosition());
     }
 
     // Highlights the tile when related to a mistake.

@@ -107,7 +107,14 @@ public class Main extends Application {
 
     // Adds a number to the tile.
     public void displayNumber(Grid grid, String number, CheckBox mistakesCheck) {
-        grid.getSelected().displayValue(number);
+        // Sets the value or removes the value.
+        if (number.equals("")) {
+            grid.getSelected().setValue(0);
+            grid.getSelected().getChildren().remove(0);
+            grid.getSelected().getChildren().add(0, new Label(""));
+        } else {
+            grid.getSelected().displayValue(number);
+        }
 
         // Checks for mistakes.
         if (mistakesCheck.isSelected()) {
@@ -119,7 +126,6 @@ public class Main extends Application {
             } else {
                 System.out.println("There are some mistakes...");
             }
-
             grid.selectTile(grid.getSelected());
         }
     }
@@ -173,9 +179,7 @@ public class Main extends Application {
                     }
                 } else {
                     // Removes the value.
-                    grid.getSelected().setValue(0);
-                    grid.getSelected().getChildren().remove(0);
-                    grid.getSelected().getChildren().add(0, new Label(""));
+                    displayNumber(grid, "", mistakesCheck);
                 }
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
