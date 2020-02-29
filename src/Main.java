@@ -69,7 +69,7 @@ public class Main extends Application {
                 tile.setPrefSize(tileSize, tileSize);
                 tile.setDefault();
                 tiles.add((x * gridSize) + y, tile);
-                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(tile, tiles, mistakesCheck));
+                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(gridSize, tile, tiles, cages, mistakesCheck));
                 gridPane.add(tile, y, x);
             }
 
@@ -120,26 +120,39 @@ public class Main extends Application {
 
     // Event handler code for click a tile.
     class TileClickHandler implements EventHandler<MouseEvent> {
+        private int gridSize;
         private Tile tile;
         private ArrayList<Tile> tiles;
+        private ArrayList<Cage> cages;
         private CheckBox mistakeCheck;
 
-        public TileClickHandler(Tile tile, ArrayList<Tile> tiles, CheckBox mistakeCheck) {
+        public TileClickHandler(int gridSize, Tile tile, ArrayList<Tile> tiles, ArrayList<Cage> cages, CheckBox mistakeCheck) {
+            this.gridSize = gridSize;
             this.tile = tile;
             this.tiles = tiles;
+            this.cages = cages;
             this.mistakeCheck = mistakeCheck;
         }
 
         @Override
         public void handle(MouseEvent event) {
-            // Defaults the selected tile and selects the new tile.
             try {
+                // Checks for mistakes.
+                if (mistakeCheck.isSelected()) {
+                    CheckMistake checkMistake = new CheckMistake(gridSize, tiles, cages);
+
+                    // Tells the user if they have won or not.
+                    if (checkMistake.checkGrid()) {
+                        System.out.println("You've won!");
+                    }
+                }
+
+                // Defaults the selected tile and selects the new tile.
                 getSelected(tiles).setDefault();
                 tile.selectTile();
             } catch (NullPointerException e) {
                 tile.selectTile();
             }
-
         }
     }
 
