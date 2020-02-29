@@ -127,6 +127,8 @@ public class Main extends Application {
             } else {
                 System.out.println("There are some mistakes...");
             }
+
+            selectedTile.selectTile();
         }
     }
 
