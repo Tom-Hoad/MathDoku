@@ -1,22 +1,14 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class CheckMistake {
-    private int gridSize;
-    private ArrayList<Row> rows;
-    private ArrayList<Column> columns;
-    private ArrayList<Cage> cages;
+    private Grid grid;
     private ArrayList<String> strPermutations;
     private ArrayList<ArrayList<Integer>> permutations;
 
-    public CheckMistake(int gridSize, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages) {
-        this.gridSize = gridSize;
-        this.rows = rows;
-        this.columns = columns;
-        this.cages = cages;
+    public CheckMistake(Grid grid) {
+        this.grid = grid;
         this.strPermutations = new ArrayList<>();
         this.permutations = new ArrayList<>();
     }
@@ -25,7 +17,7 @@ public class CheckMistake {
         boolean correct = true;
 
         // Checks cages if correct.
-        for (Cage cage : cages) {
+        for (Cage cage : grid.getCages()) {
             boolean zeroError = false;
 
             // Creates an array list of all values.
@@ -95,18 +87,18 @@ public class CheckMistake {
         }
 
         // Creates the expected hash.
-        int[] expectedTiles = new int[gridSize];
-        for (int i = 0; i < gridSize; i++) {
+        int[] expectedTiles = new int[grid.getSize()];
+        for (int i = 0; i < grid.getSize(); i++) {
             expectedTiles[i] = i + 1;
         }
         int expectedHash = Arrays.hashCode(expectedTiles);
 
         // Check rows if correct.
-        for (Row row : rows) {
+        for (Row row : grid.getRows()) {
             ArrayList<Tile> rowTiles = row.getRowTiles();
 
-            int[] rowValues = new int[rowTiles.size()];
-            for (int i = 0; i < rowValues.length; i++) {
+            int[] rowValues = new int[grid.getSize()];
+            for (int i = 0; i < grid.getSize(); i++) {
                 rowValues[i] = rowTiles.get(i).getValue();
             }
             Arrays.sort(rowValues);
@@ -122,11 +114,11 @@ public class CheckMistake {
         }
 
         // Checks columns if correct.
-        for (Column column : columns) {
+        for (Column column : grid.getColumns()) {
             ArrayList<Tile> columnTiles = column.getColumnTiles();
 
-            int[] columnValues = new int[columnTiles.size()];
-            for (int i = 0; i < columnValues.length; i++) {
+            int[] columnValues = new int[grid.getSize()];
+            for (int i = 0; i < grid.getSize(); i++) {
                 columnValues[i] = columnTiles.get(i).getValue();
             }
             Arrays.sort(columnValues);

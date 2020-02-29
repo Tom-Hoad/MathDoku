@@ -24,7 +24,7 @@ public class Cage {
         String[] tilePositions = cageDefinition.substring(cageSplit + 1).split(",");
         this.cageTiles = new ArrayList<>();
         for (String tilePosition : tilePositions) {
-            cageTiles.add(tiles.get(Integer.parseInt(tilePosition) - 1));
+            cageTiles.add(grid.getTiles().get(Integer.parseInt(tilePosition) - 1));
         }
     }
 
@@ -42,9 +42,9 @@ public class Cage {
         // Adds borders to the sides of tiles not adjacent to the cage.
         for (Tile cageTile : cageTiles) {
             String tileStyle = "-fx-border-width: " +
-                    findAdjacent(false, cageTile.getGridPosition() - gridSize) +
+                    findAdjacent(false, cageTile.getGridPosition() - grid.getSize()) +
                     findAdjacent(false, cageTile.getGridPosition() + 1) +
-                    findAdjacent(false, cageTile.getGridPosition() + gridSize) +
+                    findAdjacent(false, cageTile.getGridPosition() + grid.getSize()) +
                     findAdjacent(false, cageTile.getGridPosition() - 1);
             cageTile.addBorder(tileStyle);
         }
