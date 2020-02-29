@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -51,11 +52,19 @@ public class Main extends Application {
         int gridSize = 6;
         int tileSize = 100;
 
-        // Creates an array list of all tiles and  cages.
+        // Creates an array list of all tiles, rows, columns and cages.
         ArrayList<Tile> tiles = new ArrayList<>();
+        ArrayList<Row> rows = new ArrayList<>();
+        ArrayList<Column> columns = new ArrayList<>();
         ArrayList<Cage> cages = new ArrayList<>();
         mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(gridSize, tiles, cages, mistakesCheck));
         mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(gridSize, tiles, cages, mistakesCheck));
+
+        // Populates rows and columns.
+        for (int i = 0; i < gridSize; i++) {
+            rows.add(new Row(new ArrayList<>()));
+            columns.add(new Column(new ArrayList<>()));
+        }
 
         // Creates the grid pane.
         GridPane gridPane = new GridPane();
@@ -65,10 +74,17 @@ public class Main extends Application {
         // Fills the grid with tiles.
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
+                // Styles the tile.
                 Tile tile = new Tile((x * gridSize) + (y + 1));
                 tile.setPrefSize(tileSize, tileSize);
                 tile.setDefault();
+
+                // Adds the tile to categories.
                 tiles.add((x * gridSize) + y, tile);
+                rows.get(y).addTo(tile);
+                columns.get(x).addTo(tile);
+
+                // Adds the tile to the grid.
                 tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(gridSize, tile, tiles, cages, mistakesCheck));
                 gridPane.add(tile, y, x);
             }
