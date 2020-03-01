@@ -48,8 +48,9 @@ public class Main extends Application {
         int gridSize = 6;
         int tileSize = 100;
 
-        // Creates an object for the grid.
+        // Creates a class for the grid and change history.
         Grid grid = new Grid(gridSize, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        History history = new History(grid);
 
         // Event handler code for pressing a key.
         mainPane.setOnKeyPressed(keyEvent -> {
@@ -64,16 +65,24 @@ public class Main extends Application {
                     for (int i = 0; i <= grid.getSize() - 1; i++) {
                         if (key == codes[i]) {
                             grid.getSelected().displayNumber(grid, key.toString().substring(5), mistakesCheck);
+                            history.addMove(new Change(grid.getSelected(), key.toString().substring(5)));
                         }
                     }
                 } else {
                     // Removes the value.
                     grid.getSelected().displayNumber(grid, "", mistakesCheck);
+                    history.addMove(new Change(grid.getSelected(), ""));
                 }
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
             }
         });
+
+        // The lambda expression for undoing a change.
+        undoButton.setOnMouseClicked(mouseEvent -> history.undo());
+
+        // The lambda expression for redoing a change.
+        redoButton.setOnMouseClicked(mouseEvent -> history.redo());
 
         // The event handler code for clearing the grid.
         clearButton.setOnAction(actionEvent -> {
@@ -152,6 +161,7 @@ public class Main extends Application {
                 // Displays the number on the tile.
                 try {
                     grid.getSelected().displayNumber(grid, numButton.getText(), mistakesCheck);
+                    history.addMove(new Change(grid.getSelected(), numButton.getText()));
                 } catch (NullPointerException e) {
                     System.out.println("No tile has been selected.");
                 }
