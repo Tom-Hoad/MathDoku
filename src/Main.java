@@ -85,13 +85,14 @@ public class Main extends Application {
             alertClear.show();
 
             // Clears the grid if accepted the confirmation.
-            Optional<ButtonType> result = alertClear.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                System.out.println("Clear");
-                for (Tile tile : grid.getTiles()) {
-                    tile.displayNumber(grid, "", mistakesCheck);
-                }
-            }
+            alertClear.showAndWait()
+                    .filter(response -> response == ButtonType.OK)
+                    .ifPresent(response -> {
+                        System.out.println("Clear");
+                        for (Tile tile : grid.getTiles()) {
+                            tile.displayNumber(grid, "", mistakesCheck);
+                        }
+                    });
         });
 
         // The event handler for selecting to check the mistakes.
