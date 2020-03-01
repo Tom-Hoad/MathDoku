@@ -3,6 +3,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -42,11 +43,12 @@ public class Main extends Application {
         // Adds functionality elements to the action bar.
         Button undoButton = new Button("Undo");
         Button redoButton = new Button("Redo");
+        Button clearButton = new Button("Clear Grid");
         Button loadFileButton = new Button("Load from File");
         Button loadTextButton = new Button("Load from Text");
         Label mistakesLabel = new Label("Click to show mistakes:");
         CheckBox mistakesCheck = new CheckBox();
-        optionsHBox.getChildren().addAll(undoButton, redoButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
+        optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
 
         // Sets grid pane size parameters.
         int gridSize = 6;
@@ -57,6 +59,7 @@ public class Main extends Application {
 
         // Adds event handlers for numbering and selecting tiles.
         mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(grid, mistakesCheck));
+        clearButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new ClearGridHandler());
         mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(grid, mistakesCheck));
 
         // Creates the grid pane.
@@ -82,7 +85,6 @@ public class Main extends Application {
 
             // Adds number buttons to below the grid.
             Button numButton = new Button(String.valueOf(i + 1));
-            numButton.setPrefSize(50, 50);
             numButton.setFont(new Font(30));
             numButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new NumberButtonHandler(grid, i + 1, mistakesCheck));
             buttonHBox.getChildren().add(numButton);
@@ -238,6 +240,15 @@ public class Main extends Application {
                 }
             }
             grid.selectTile(grid.getSelected());
+        }
+    }
+
+    // The event handler code for clearing the grid.
+    class ClearGridHandler implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent event) {
+            Alert alertClear = new Alert(Alert.AlertType.CONFIRMATION);
+            alertClear.show();
         }
     }
 
