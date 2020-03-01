@@ -79,17 +79,17 @@ public class Tile extends StackPane implements Comparable<Tile> {
             getChildren().add(0, new Label(""));
         } else {
             displayValue(number);
-        }
 
-        // Checks for mistakes.
-        if (mistakesCheck.isSelected()) {
-            CheckMistake checkMistake = new CheckMistake(grid);
+            // Checks for mistakes.
+            if (mistakesCheck.isSelected()) {
+                CheckMistake checkMistake = new CheckMistake(grid);
 
-            // Tells the user if they have won or not.
-            if (checkMistake.checkGrid()) {
-                System.out.println("You've won!");
-            } else {
-                System.out.println("There are some mistakes...");
+                // Tells the user if they have won or not.
+                if (checkMistake.checkGrid()) {
+                    System.out.println("You've won!");
+                } else {
+                    System.out.println("There are some mistakes...");
+                }
             }
             grid.selectTile(this);
         }

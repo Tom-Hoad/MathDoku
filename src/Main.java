@@ -82,13 +82,10 @@ public class Main extends Application {
             alertClear.setTitle("Clear Grid");
             alertClear.setHeaderText("Clear Grid");
             alertClear.setContentText("Are you sure you want to clear the grid?");
-            alertClear.show();
 
-            // Clears the grid if accepted the confirmation.
             alertClear.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
-                        System.out.println("Clear");
                         for (Tile tile : grid.getTiles()) {
                             tile.displayNumber(grid, "", mistakesCheck);
                         }
