@@ -31,9 +31,9 @@ public class History {
     public void undo() {
         if (!undoHistory.isEmpty()) {
             Change lastMove = undoHistory.pop();
-            currentChange = lastMove;
             lastMove.getTile().displayNumber(grid, checkMistake, lastMove.getValue());
             redoHistory.push(currentChange);
+            currentChange = lastMove;
         }
     }
 
@@ -42,7 +42,8 @@ public class History {
         if (!redoHistory.isEmpty()) {
             Change nextMove = redoHistory.pop();
             nextMove.getTile().displayNumber(grid, checkMistake, nextMove.getValue());
-            undoHistory.push(nextMove);
+            undoHistory.push(currentChange);
+            currentChange = nextMove;
         }
     }
 }
