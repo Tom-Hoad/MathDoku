@@ -1,4 +1,3 @@
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -6,16 +5,16 @@ import javafx.scene.text.Font;
 // The subclass for a single tile in the grid.
 public class Tile extends StackPane implements Comparable<Tile> {
     private int gridPosition;
+    private int value;
     private String style;
     private String border;
-    private int value;
 
     // The Tile subclass constructor.
     public Tile(int gridPosition) {
         this.gridPosition = gridPosition;
+        this.value = 0;
         this.getChildren().add(0, new Label(""));
         this.style = "-fx-border-color: black; ";
-        this.value = 0;
     }
 
     // Defaults the tile.
@@ -57,10 +56,10 @@ public class Tile extends StackPane implements Comparable<Tile> {
     }
 
     // Displays the value.
-    public void displayValue(String number) {
+    public void displayValue(int tileValue) {
         getChildren().remove(0);
-        setValue(Integer.parseInt(number));
-        Label label = new Label(number);
+        setValue(tileValue);
+        Label label = new Label(String.valueOf(tileValue));
         label.setFont(new Font(50));
         getChildren().add(0, label);
     }
@@ -71,19 +70,17 @@ public class Tile extends StackPane implements Comparable<Tile> {
     }
 
     // Adds a number to the tile.
-    public void displayNumber(Grid grid, String number, CheckBox mistakesCheck) {
+    public void displayNumber(Grid grid, CheckMistake checkMistake, int tileValue) {
         // Sets the value or removes the value.
-        if (number.equals("")) {
+        if (tileValue == 0) {
             setValue(0);
             getChildren().remove(0);
             getChildren().add(0, new Label(""));
         } else {
-            displayValue(number);
+            displayValue(tileValue);
 
             // Checks for mistakes.
-            if (mistakesCheck.isSelected()) {
-                CheckMistake checkMistake = new CheckMistake(grid);
-
+            if (checkMistake.isChecked()) {
                 // Tells the user if they have won or not.
                 if (checkMistake.checkGrid()) {
                     System.out.println("You've won!");

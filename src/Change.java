@@ -1,12 +1,12 @@
 // The class for a new grid change.
 public class Change {
     private Tile tile;
-    private String value;
+    private int value;
 
     // The change class constructor.
-    public Change(Tile tile, String value) {
+    public Change(Tile tile) {
         this.tile = tile;
-        this.value = value;
+        this.value = tile.getValue();
     }
 
     // Gets the tile of change.
@@ -15,7 +15,7 @@ public class Change {
     }
 
     // Gets the value of the change.
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 }

@@ -1,22 +1,18 @@
-import javafx.scene.control.CheckBox;
-
 import java.util.ArrayList;
 
 // The class for a grid.
 public class Grid {
     private int size;
     private Tile selectedTile;
-    private CheckBox mistakesCheck;
     private ArrayList<Row> rows;
     private ArrayList<Column> columns;
     private ArrayList<Cage> cages;
     private ArrayList<Tile> tiles;
 
     // The grid class constructor.
-    public Grid(int size, CheckBox mistakesCheck, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages) {
+    public Grid(int size, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages) {
         this.size = size;
         this.selectedTile = null;
-        this.mistakesCheck = mistakesCheck;
         this.rows = rows;
         this.columns = columns;
         this.cages = cages;
@@ -66,11 +62,6 @@ public class Grid {
     // Gets the selected tile.
     public Tile getSelected() {
         return selectedTile;
-    }
-
-    // Gets the mistakes checkbox.
-    public CheckBox getMistakesCheck() {
-        return mistakesCheck;
     }
 
     // Gets all the rows in the grid.

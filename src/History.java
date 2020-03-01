@@ -3,12 +3,14 @@ import java.util.Stack;
 // The class for undo and redo history.
 public class History {
     private Grid grid;
+    private CheckMistake checkMistake;
     private Stack<Change> undoHistory;
     private Stack<Change> redoHistory;
 
     // The history class constructor.
-    public History(Grid grid) {
+    public History(Grid grid, CheckMistake checkMistake) {
         this.grid = grid;
+        this.checkMistake = checkMistake;
         this.undoHistory = new Stack<>();
         this.redoHistory = new Stack<>();
     }
@@ -25,9 +27,11 @@ public class History {
 
     // Undoes the last move.
     public void undo() {
+        System.out.println(undoHistory);
+
         if (!undoHistory.isEmpty()) {
             Change lastMove = undoHistory.pop();
-            lastMove.getTile().displayNumber(grid, lastMove.getValue(), grid.getMistakesCheck());
+            lastMove.getTile().displayNumber(grid, checkMistake, lastMove.getValue());
             redoHistory.push(lastMove);
         }
     }

@@ -5,16 +5,29 @@ import java.util.Collections;
 // The class for checking mistakes.
 public class CheckMistake {
     private Grid grid;
+    private boolean isChecked;
     private ArrayList<String> strPermutations;
     private ArrayList<ArrayList<Integer>> permutations;
 
     // The check mistake class constructor.
     public CheckMistake(Grid grid) {
         this.grid = grid;
+        this.isChecked = false;
         this.strPermutations = new ArrayList<>();
         this.permutations = new ArrayList<>();
     }
 
+    // Gets if the mistake checkbox is checked.
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    // Sets the result of the mistake checkbox.
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
+    // Checks the grid for mistakes.
     public boolean checkGrid() {
         boolean correct = true;
 
