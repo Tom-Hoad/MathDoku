@@ -2,11 +2,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+// The class for checking mistakes.
 public class CheckMistake {
     private Grid grid;
     private ArrayList<String> strPermutations;
     private ArrayList<ArrayList<Integer>> permutations;
 
+    // The check mistake class constructor.
     public CheckMistake(Grid grid) {
         this.grid = grid;
         this.strPermutations = new ArrayList<>();
