@@ -74,11 +74,11 @@ public class Tile extends StackPane implements Comparable<Tile> {
     public void displayNumber(Grid grid, String number, CheckBox mistakesCheck) {
         // Sets the value or removes the value.
         if (number.equals("")) {
-            grid.getSelected().setValue(0);
-            grid.getSelected().getChildren().remove(0);
-            grid.getSelected().getChildren().add(0, new Label(""));
+            setValue(0);
+            getChildren().remove(0);
+            getChildren().add(0, new Label(""));
         } else {
-            grid.getSelected().displayValue(number);
+            displayValue(number);
         }
 
         // Checks for mistakes.
@@ -91,7 +91,7 @@ public class Tile extends StackPane implements Comparable<Tile> {
             } else {
                 System.out.println("There are some mistakes...");
             }
-            grid.selectTile(grid.getSelected());
+            grid.selectTile(this);
         }
     }
 

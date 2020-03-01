@@ -1,13 +1,9 @@
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -89,8 +85,12 @@ public class Main extends Application {
             alertClear.show();
 
             // Clears the grid if accepted the confirmation.
-            for (Tile tile : grid.getTiles()) {
-                tile.displayNumber(grid, "", mistakesCheck);
+            Optional<ButtonType> result = alertClear.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                System.out.println("Clear");
+                for (Tile tile : grid.getTiles()) {
+                    tile.displayNumber(grid, "", mistakesCheck);
+                }
             }
         });
 
