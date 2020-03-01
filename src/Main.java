@@ -1,12 +1,10 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -15,8 +13,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main extends Application {
@@ -57,10 +55,64 @@ public class Main extends Application {
         // Creates an object for the grid.
         Grid grid = new Grid(gridSize, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
-        // Adds event handlers for numbering and selecting tiles.
-        mainPane.addEventHandler(KeyEvent.KEY_PRESSED, new KeyPressedHandler(grid, mistakesCheck));
-        clearButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new ClearGridHandler());
-        mistakesCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new MistakeCheckHandler(grid, mistakesCheck));
+        // Event handler code for pressing a key.
+        mainPane.setOnKeyPressed(keyEvent -> {
+            // Returns the number pressed.
+            KeyCode key = keyEvent.getCode();
+            KeyCode[] codes = {KeyCode.DIGIT1, KeyCode.DIGIT2, KeyCode.DIGIT3, KeyCode.DIGIT4,
+                    KeyCode.DIGIT5, KeyCode.DIGIT6, KeyCode.DIGIT7, KeyCode.DIGIT8};
+
+            // Displays the number on the tile.
+            try {
+                if (key != KeyCode.BACK_SPACE) {
+                    for (int i = 0; i <= grid.getSize() - 1; i++) {
+                        if (key == codes[i]) {
+                            grid.getSelected().displayNumber(grid, key.toString().substring(5), mistakesCheck);
+                        }
+                    }
+                } else {
+                    // Removes the value.
+                    grid.getSelected().displayNumber(grid, "", mistakesCheck);
+                }
+            } catch (NullPointerException e) {
+                System.out.println("No tile has been selected.");
+            }
+        });
+
+        // The event handler code for clearing the grid.
+        clearButton.setOnAction(actionEvent -> {
+            // Displays a confirmation alert.
+            Alert alertClear = new Alert(Alert.AlertType.CONFIRMATION);
+            alertClear.setTitle("Clear Grid");
+            alertClear.setHeaderText("Clear Grid");
+            alertClear.setContentText("Are you sure you want to clear the grid?");
+            alertClear.show();
+
+            // Clears the grid if accepted the confirmation.
+            for (Tile tile : grid.getTiles()) {
+                tile.displayNumber(grid, "", mistakesCheck);
+            }
+        });
+
+        // The event handler for selecting to check the mistakes.
+        mistakesCheck.setOnMouseClicked(mouseEvent -> {
+            // Checks mistake.
+            if (mistakesCheck.isSelected()) {
+                CheckMistake checkMistake = new CheckMistake(grid);
+
+                // Tells the user if they have won or not.
+                if (checkMistake.checkGrid()) {
+                    System.out.println("You've won!");
+                } else {
+                    System.out.println("There are some mistakes...");
+                }
+            } else {
+                for (Tile tile : grid.getTiles()) {
+                    tile.correctTile();
+                }
+            }
+            grid.selectTile(grid.getSelected());
+        });
 
         // Creates the grid pane.
         GridPane gridPane = new GridPane();
@@ -80,14 +132,32 @@ public class Main extends Application {
                 grid.addToColumn(i, tile);
                 gridPane.add(tile, j, i);
 
-                tile.addEventHandler(MouseEvent.MOUSE_CLICKED, new TileClickHandler(grid, tile));
+                // Event handler code for click a tile.
+                tile.setOnMouseClicked(mouseEvent -> {
+                    try {
+                        // Defaults the selected tile and selects the new tile.
+                        grid.getSelected().setDefault();
+                        grid.selectTile(tile);
+                    } catch (NullPointerException e) {
+                        grid.selectTile(tile);
+                    }
+                });
             }
 
             // Adds number buttons to below the grid.
             Button numButton = new Button(String.valueOf(i + 1));
             numButton.setFont(new Font(30));
-            numButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new NumberButtonHandler(grid, i + 1, mistakesCheck));
             buttonHBox.getChildren().add(numButton);
+
+            // The event handler code for pressing a number button.
+            numButton.setOnMouseClicked(mouseEvent -> {
+                // Displays the number on the tile.
+                try {
+                    grid.getSelected().displayNumber(grid, numButton.getText(), mistakesCheck);
+                } catch (NullPointerException e) {
+                    System.out.println("No tile has been selected.");
+                }
+            });
         }
         grid.findTiles();
 
@@ -105,151 +175,6 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
-    }
-
-    // Adds a number to the tile.
-    public void displayNumber(Grid grid, String number, CheckBox mistakesCheck) {
-        // Sets the value or removes the value.
-        if (number.equals("")) {
-            grid.getSelected().setValue(0);
-            grid.getSelected().getChildren().remove(0);
-            grid.getSelected().getChildren().add(0, new Label(""));
-        } else {
-            grid.getSelected().displayValue(number);
-        }
-
-        // Checks for mistakes.
-        if (mistakesCheck.isSelected()) {
-            CheckMistake checkMistake = new CheckMistake(grid);
-
-            // Tells the user if they have won or not.
-            if (checkMistake.checkGrid()) {
-                System.out.println("You've won!");
-            } else {
-                System.out.println("There are some mistakes...");
-            }
-            grid.selectTile(grid.getSelected());
-        }
-    }
-
-    // Event handler code for click a tile.
-    class TileClickHandler implements EventHandler<MouseEvent> {
-        private Grid grid;
-        private Tile tile;
-
-        public TileClickHandler(Grid grid, Tile tile) {
-            this.grid = grid;
-            this.tile = tile;
-        }
-
-        @Override
-        public void handle(MouseEvent event) {
-            try {
-                // Defaults the selected tile and selects the new tile.
-                grid.getSelected().setDefault();
-                grid.selectTile(tile);
-            } catch (NullPointerException e) {
-                grid.selectTile(tile);
-            }
-        }
-    }
-
-    // Event handler code for pressing a key.
-    class KeyPressedHandler implements EventHandler<KeyEvent> {
-        private Grid grid;
-        private CheckBox mistakesCheck;
-
-        public KeyPressedHandler(Grid grid, CheckBox mistakesCheck) {
-            this.grid = grid;
-            this.mistakesCheck = mistakesCheck;
-        }
-
-        @Override
-        public void handle(KeyEvent event) {
-            // Returns the number pressed.
-            KeyCode key = event.getCode();
-            KeyCode[] codes = {KeyCode.DIGIT1, KeyCode.DIGIT2, KeyCode.DIGIT3, KeyCode.DIGIT4,
-                               KeyCode.DIGIT5, KeyCode.DIGIT6, KeyCode.DIGIT7, KeyCode.DIGIT8};
-
-            // Displays the number on the tile.
-            try {
-                if (key != KeyCode.BACK_SPACE) {
-                    for (int i = 0; i <= grid.getSize() - 1; i++) {
-                        if (key == codes[i]) {
-                            displayNumber(grid, key.toString().substring(5), mistakesCheck);
-                        }
-                    }
-                } else {
-                    // Removes the value.
-                    displayNumber(grid, "", mistakesCheck);
-                }
-            } catch (NullPointerException e) {
-                System.out.println("No tile has been selected.");
-            }
-        }
-    }
-
-    // Event handler code for pressing a number button.
-    class NumberButtonHandler implements EventHandler<MouseEvent> {
-        private Grid grid;
-        private int number;
-        private CheckBox mistakesCheck;
-
-        public NumberButtonHandler(Grid grid, int number, CheckBox mistakesCheck) {
-            this.grid = grid;
-            this.number = number;
-            this.mistakesCheck = mistakesCheck;
-        }
-
-        @Override
-        public void handle(MouseEvent event) {
-            // Displays the number on the tile.
-            try {
-                displayNumber(grid, String.valueOf(number), mistakesCheck);
-            } catch (NullPointerException e) {
-                System.out.println("No tile has been selected.");
-            }
-        }
-    }
-
-    // The event handler for selecting to check the mistakes.
-    class MistakeCheckHandler implements EventHandler<MouseEvent> {
-        private Grid grid;
-        private CheckBox mistakesCheck;
-
-        public MistakeCheckHandler(Grid grid, CheckBox mistakesCheck) {
-            this.grid = grid;
-            this.mistakesCheck = mistakesCheck;
-        }
-
-        @Override
-        public void handle(MouseEvent event) {
-            // Checks mistake.
-            if (mistakesCheck.isSelected()) {
-                CheckMistake checkMistake = new CheckMistake(grid);
-
-                // Tells the user if they have won or not.
-                if (checkMistake.checkGrid()) {
-                    System.out.println("You've won!");
-                } else {
-                    System.out.println("There are some mistakes...");
-                }
-            } else {
-                for (Tile tile : grid.getTiles()) {
-                    tile.correctTile();
-                }
-            }
-            grid.selectTile(grid.getSelected());
-        }
-    }
-
-    // The event handler code for clearing the grid.
-    class ClearGridHandler implements EventHandler<MouseEvent> {
-        @Override
-        public void handle(MouseEvent event) {
-            Alert alertClear = new Alert(Alert.AlertType.CONFIRMATION);
-            alertClear.show();
-        }
     }
 
     public static void main(String[] args) {

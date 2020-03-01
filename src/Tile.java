@@ -1,3 +1,4 @@
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -67,6 +68,31 @@ public class Tile extends StackPane implements Comparable<Tile> {
     // Sets the tile value.
     public void setValue(int value) {
         this.value = value;
+    }
+
+    // Adds a number to the tile.
+    public void displayNumber(Grid grid, String number, CheckBox mistakesCheck) {
+        // Sets the value or removes the value.
+        if (number.equals("")) {
+            grid.getSelected().setValue(0);
+            grid.getSelected().getChildren().remove(0);
+            grid.getSelected().getChildren().add(0, new Label(""));
+        } else {
+            grid.getSelected().displayValue(number);
+        }
+
+        // Checks for mistakes.
+        if (mistakesCheck.isSelected()) {
+            CheckMistake checkMistake = new CheckMistake(grid);
+
+            // Tells the user if they have won or not.
+            if (checkMistake.checkGrid()) {
+                System.out.println("You've won!");
+            } else {
+                System.out.println("There are some mistakes...");
+            }
+            grid.selectTile(grid.getSelected());
+        }
     }
 
     // Compares the value of two tiles.
