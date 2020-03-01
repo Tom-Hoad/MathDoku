@@ -27,8 +27,6 @@ public class History {
 
     // Undoes the last move.
     public void undo() {
-        System.out.println(undoHistory);
-
         if (!undoHistory.isEmpty()) {
             Change lastMove = undoHistory.pop();
             lastMove.getTile().displayNumber(grid, checkMistake, lastMove.getValue());
@@ -38,6 +36,13 @@ public class History {
 
     // Redoes the last move.
     public void redo() {
-        undoHistory.push(redoHistory.pop());
+        System.out.println(redoHistory);
+
+        if (!redoHistory.isEmpty()) {
+            Change nextMove = redoHistory.pop();
+            System.out.println(nextMove.getValue());
+            nextMove.getTile().displayNumber(grid, checkMistake, nextMove.getValue());
+            undoHistory.push(nextMove);
+        }
     }
 }
