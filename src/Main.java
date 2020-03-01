@@ -49,7 +49,7 @@ public class Main extends Application {
         int tileSize = 100;
 
         // Creates a class for the grid and change history.
-        Grid grid = new Grid(gridSize, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        Grid grid = new Grid(gridSize, mistakesCheck, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         History history = new History(grid);
 
         // Event handler code for pressing a key.

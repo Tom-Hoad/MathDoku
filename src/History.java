@@ -25,7 +25,11 @@ public class History {
 
     // Undoes the last move.
     public void undo() {
-        redoHistory.push(undoHistory.pop());
+        if (!undoHistory.isEmpty()) {
+            Change lastMove = undoHistory.pop();
+            lastMove.getTile().displayNumber(grid, lastMove.getValue(), grid.getMistakesCheck());
+            redoHistory.push(lastMove);
+        }
     }
 
     // Redoes the last move.

@@ -8,4 +8,14 @@ public class Change {
         this.tile = tile;
         this.value = value;
     }
+
+    // Gets the tile of change.
+    public Tile getTile() {
+        return tile;
+    }
+
+    // Gets the value of the change.
+    public String getValue() {
+        return value;
+    }
 }
