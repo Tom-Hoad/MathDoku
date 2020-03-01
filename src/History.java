@@ -4,6 +4,7 @@ import java.util.Stack;
 public class History {
     private Grid grid;
     private CheckMistake checkMistake;
+    private Change currentChange;
     private Stack<Change> undoHistory;
     private Stack<Change> redoHistory;
 
@@ -18,6 +19,7 @@ public class History {
     // Makes a new change on the grid.
     public void addMove(Change change) {
         undoHistory.push(change);
+        currentChange = change;
 
         // Clears the redo history, if you've just undone.
         if (!redoHistory.empty()) {
@@ -29,18 +31,16 @@ public class History {
     public void undo() {
         if (!undoHistory.isEmpty()) {
             Change lastMove = undoHistory.pop();
+            currentChange = lastMove;
             lastMove.getTile().displayNumber(grid, checkMistake, lastMove.getValue());
-            redoHistory.push(lastMove);
+            redoHistory.push(currentChange);
         }
     }
 
     // Redoes the last move.
     public void redo() {
-        System.out.println(redoHistory);
-
         if (!redoHistory.isEmpty()) {
             Change nextMove = redoHistory.pop();
-            System.out.println(nextMove.getValue());
             nextMove.getTile().displayNumber(grid, checkMistake, nextMove.getValue());
             undoHistory.push(nextMove);
         }

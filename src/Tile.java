@@ -71,12 +71,13 @@ public class Tile extends StackPane implements Comparable<Tile> {
 
     // Adds a number to the tile.
     public void displayNumber(Grid grid, CheckMistake checkMistake, int tileValue) {
-        // Sets the value or removes the value.
         if (tileValue == 0) {
+            // Removes the value.
             setValue(0);
             getChildren().remove(0);
             getChildren().add(0, new Label(""));
         } else {
+            // Displays the value.
             displayValue(tileValue);
 
             // Checks for mistakes.

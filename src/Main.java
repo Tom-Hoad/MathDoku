@@ -71,8 +71,8 @@ public class Main extends Application {
                     }
                 } else {
                     // Removes the value.
-                    grid.getSelected().displayNumber(grid, checkMistake, 0);
                     history.addMove(new Change(grid.getSelected()));
+                    grid.getSelected().displayNumber(grid, checkMistake, 0);
                 }
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
