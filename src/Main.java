@@ -41,6 +41,7 @@ public class Main extends Application {
         Button loadTextButton = new Button("Load from Text");
         Label mistakesLabel = new Label("Click to show mistakes:");
         CheckBox mistakesCheck = new CheckBox();
+
         optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
 
         // Sets grid pane size parameters.
@@ -48,7 +49,7 @@ public class Main extends Application {
         int tileSize = 100;
 
         // Creates a class for the grid and change history.
-        Grid grid = new Grid(gridSize, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        Grid grid = new Grid(gridSize, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),  new History(undoButton, redoButton));
 
         // Event handler code for pressing a key.
         mainPane.setOnKeyPressed(keyEvent -> {

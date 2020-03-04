@@ -12,7 +12,7 @@ public class Grid {
     private History history;
 
     // The grid class constructor.
-    public Grid(int size, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages) {
+    public Grid(int size, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages, History history) {
         this.size = size;
         this.selectedTile = null;
 
@@ -22,7 +22,7 @@ public class Grid {
         this.tiles = new ArrayList<>();
 
         this.checkMistake = new CheckMistake(this);
-        this.history = new History();
+        this.history = history;
 
         // Populates rows and columns.
         for (int i = 0; i < size; i++) {

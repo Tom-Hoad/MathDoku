@@ -1,13 +1,22 @@
+import javafx.scene.control.Button;
+
 import java.util.Stack;
 
 // The class for undo and redo history.
 public class History {
     private Change currentChange;
+    private Button undoButton;
+    private Button redoButton;
     private Stack<Change> undoHistory;
     private Stack<Change> redoHistory;
 
     // The history class constructor.
-    public History() {
+    public History(Button undoButton, Button redoButton) {
+        this.undoButton = undoButton;
+        undoButton.setDisable(true);
+        this.redoButton = redoButton;
+        redoButton.setDisable(true);
+
         this.undoHistory = new Stack<>();
         this.redoHistory = new Stack<>();
     }
@@ -16,10 +25,12 @@ public class History {
     public void addMove(Change change) {
         undoHistory.push(currentChange);
         currentChange = change;
+        undoButton.setDisable(false);
 
         // Clears the redo history, if you've just undone.
         if (!redoHistory.empty()) {
             redoHistory.clear();
+            redoButton.setDisable(true);
         }
     }
 
@@ -29,6 +40,11 @@ public class History {
             currentChange.getTile().displayNumber(currentChange.getOldValue());
             redoHistory.push(currentChange);
             currentChange = undoHistory.pop();
+
+            if (undoHistory.isEmpty()) {
+                undoButton.setDisable(true);
+            }
+            redoButton.setDisable(false);
         }
     }
 
@@ -38,12 +54,19 @@ public class History {
             undoHistory.push(currentChange);
             currentChange = redoHistory.pop();
             currentChange.getTile().displayNumber(currentChange.getNewValue());
+
+            if (redoHistory.isEmpty()) {
+                redoButton.setDisable(true);
+            }
+            undoButton.setDisable(false);
         }
     }
 
     // Clears all history.
     public void clearHistory() {
         undoHistory.clear();
+        undoButton.setDisable(true);
         redoHistory.clear();
+        redoButton.setDisable(true);
     }
 }
