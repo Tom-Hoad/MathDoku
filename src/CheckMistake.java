@@ -1,3 +1,5 @@
+import javafx.scene.control.Alert;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,9 +29,12 @@ public class CheckMistake {
         if (isChecked) {
             // Tells the user if they have won or not.
             if (checkGrid()) {
-                System.out.println("You've won!");
-            } else {
-                System.out.println("There are some mistakes...");
+                Alert winAlert = new Alert(Alert.AlertType.INFORMATION);
+                winAlert.setTitle("Congratulations!");
+                winAlert.setHeaderText("Congratulations!");
+                winAlert.setContentText("You've won this game of MathDoku!");
+
+                winAlert.show();
             }
         } else {
             // Corrects all tiles.
