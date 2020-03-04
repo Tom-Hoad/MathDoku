@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Main extends Application {
@@ -72,6 +71,8 @@ public class Main extends Application {
                     grid.getHistory().addMove(new Change(grid.getSelected(), 0));
                     grid.getSelected().displayNumber(0);
                 }
+                grid.getCheckMistake().shouldCheck();
+                grid.selectTile(grid.getSelected());
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
             }
@@ -96,6 +97,7 @@ public class Main extends Application {
                     .ifPresent(response -> {
                         for (Tile tile : grid.getTiles()) {
                             tile.displayNumber(0);
+                            grid.getHistory().clearHistory();
                         }
                     });
         });
@@ -103,20 +105,7 @@ public class Main extends Application {
         // The event handler code for selecting to check the mistakes.
         mistakesCheck.setOnMouseClicked(mouseEvent -> {
             grid.getCheckMistake().setChecked(mistakesCheck.isSelected());
-
-            // Checks mistake.
-            if (grid.getCheckMistake().isChecked()) {
-                // Tells the user if they have won or not.
-                if (grid.getCheckMistake().checkGrid()) {
-                    System.out.println("You've won!");
-                } else {
-                    System.out.println("There are some mistakes...");
-                }
-            } else {
-                for (Tile tile : grid.getTiles()) {
-                    tile.correctTile();
-                }
-            }
+            grid.getCheckMistake().shouldCheck();
             grid.selectTile(grid.getSelected());
         });
 
@@ -161,6 +150,8 @@ public class Main extends Application {
                 try {
                     grid.getHistory().addMove(new Change(grid.getSelected(), Integer.parseInt(numButton.getText())));
                     grid.getSelected().displayNumber(Integer.parseInt(numButton.getText()));
+                    grid.getCheckMistake().shouldCheck();
+                    grid.selectTile(grid.getSelected());
                 } catch (NullPointerException e) {
                     System.out.println("No tile has been selected.");
                 }

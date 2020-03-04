@@ -2,16 +2,12 @@ import java.util.Stack;
 
 // The class for undo and redo history.
 public class History {
-    private Grid grid;
-    private CheckMistake checkMistake;
     private Change currentChange;
     private Stack<Change> undoHistory;
     private Stack<Change> redoHistory;
 
     // The history class constructor.
-    public History(Grid grid, CheckMistake checkMistake) {
-        this.grid = grid;
-        this.checkMistake = checkMistake;
+    public History() {
         this.undoHistory = new Stack<>();
         this.redoHistory = new Stack<>();
     }
@@ -43,5 +39,11 @@ public class History {
             currentChange = redoHistory.pop();
             currentChange.getTile().displayNumber(currentChange.getNewValue());
         }
+    }
+
+    // Clears all history.
+    public void clearHistory() {
+        undoHistory.clear();
+        redoHistory.clear();
     }
 }

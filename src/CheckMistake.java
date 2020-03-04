@@ -17,14 +17,26 @@ public class CheckMistake {
         this.permutations = new ArrayList<>();
     }
 
-    // Checks if it should check for mistakes.
-    public boolean isChecked() {
-        return isChecked;
-    }
-
     // Sets the result of the mistake checkbox.
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    // Checks if it should check the grid.
+    public void shouldCheck() {
+        if (isChecked) {
+            // Tells the user if they have won or not.
+            if (checkGrid()) {
+                System.out.println("You've won!");
+            } else {
+                System.out.println("There are some mistakes...");
+            }
+        } else {
+            // Corrects all tiles.
+            for (Tile tile : grid.getTiles()) {
+                tile.correctTile();
+            }
+        }
     }
 
     // Checks the grid for mistakes.

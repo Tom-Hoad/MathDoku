@@ -22,7 +22,7 @@ public class Grid {
         this.tiles = new ArrayList<>();
 
         this.checkMistake = new CheckMistake(this);
-        this.history = new History(this, checkMistake);
+        this.history = new History();
 
         // Populates rows and columns.
         for (int i = 0; i < size; i++) {
@@ -56,8 +56,10 @@ public class Grid {
 
     // Selects a tile.
     public void selectTile(Tile tile) {
-        this.selectedTile = tile;
-        tile.setSelected();
+        if (tile != null) {
+            this.selectedTile = tile;
+            tile.setSelected();
+        }
     }
 
     // Gets the size of the grid.
