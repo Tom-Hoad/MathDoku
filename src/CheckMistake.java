@@ -17,7 +17,7 @@ public class CheckMistake {
         this.permutations = new ArrayList<>();
     }
 
-    // Gets if the mistake checkbox is checked.
+    // Checks if it should check for mistakes.
     public boolean isChecked() {
         return isChecked;
     }

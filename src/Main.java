@@ -100,7 +100,7 @@ public class Main extends Application {
                     });
         });
 
-        // The event handler for selecting to check the mistakes.
+        // The event handler code for selecting to check the mistakes.
         mistakesCheck.setOnMouseClicked(mouseEvent -> {
             grid.getCheckMistake().setChecked(mistakesCheck.isSelected());
 
@@ -159,6 +159,7 @@ public class Main extends Application {
             numButton.setOnMouseClicked(mouseEvent -> {
                 // Displays the number on the tile.
                 try {
+                    grid.getHistory().addMove(new Change(grid.getSelected(), Integer.parseInt(numButton.getText())));
                     grid.getSelected().displayNumber(Integer.parseInt(numButton.getText()));
                 } catch (NullPointerException e) {
                     System.out.println("No tile has been selected.");
