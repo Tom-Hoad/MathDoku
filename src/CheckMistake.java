@@ -46,6 +46,7 @@ public class CheckMistake {
         // Checks cages if correct.
         for (Cage cage : grid.getCages()) {
             boolean zeroError = false;
+            boolean cageError = false;
 
             // Creates an array list of all values.
             ArrayList<Integer> cageValues = new ArrayList<>();
@@ -79,7 +80,7 @@ public class CheckMistake {
                         givenResult += tileValue;
                     }
                     if (givenResult != expectedResult) {
-                        correct = false;
+                        cageError = true;
                     }
                     break;
                 // Multiply values.
@@ -89,7 +90,7 @@ public class CheckMistake {
                         givenResult = givenResult * tileValue;
                     }
                     if (givenResult != expectedResult) {
-                        correct = false;
+                        cageError = true;
                     }
                     break;
                 // Minus values.
@@ -98,7 +99,7 @@ public class CheckMistake {
                     heapsAlgorithm(cageValues.size(), cageValues);
 
                     if (!subtractValues(expectedResult)) {
-                        correct = false;
+                        cageError = true;
                     }
                     break;
                 // Divide values.
@@ -107,9 +108,17 @@ public class CheckMistake {
                     heapsAlgorithm(cageValues.size(), cageValues);
 
                     if (!divideValues(expectedResult)) {
-                        correct = false;
+                        cageError = true;
                     }
                     break;
+            }
+
+            // Marks the cage as incorrect.
+            if (cageError) {
+                for (Tile cageTile : cage.getCageTiles()) {
+                    cageTile.setMistake();
+                }
+                correct = false;
             }
         }
 
