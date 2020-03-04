@@ -55,42 +55,21 @@ public class Tile extends StackPane implements Comparable<Tile> {
         return value;
     }
 
-    // Displays the value.
-    public void displayValue(int tileValue) {
+    // Adds a number to the tile.
+    public void displayNumber(int tileValue) {
+        this.value = tileValue;
+
         getChildren().remove(0);
-        setValue(tileValue);
-        Label label = new Label(String.valueOf(tileValue));
+        Label label = new Label();
+
+        if (tileValue != 0) {
+            label.setText(String.valueOf(tileValue));
+        } else {
+            label.setText("");
+        }
+
         label.setFont(new Font(50));
         getChildren().add(0, label);
-    }
-
-    // Sets the tile value.
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    // Adds a number to the tile.
-    public void displayNumber(Grid grid, CheckMistake checkMistake, int tileValue) {
-        if (tileValue == 0) {
-            // Removes the value.
-            setValue(0);
-            getChildren().remove(0);
-            getChildren().add(0, new Label(""));
-        } else {
-            // Displays the value.
-            displayValue(tileValue);
-
-            // Checks for mistakes.
-            if (checkMistake.isChecked()) {
-                // Tells the user if they have won or not.
-                if (checkMistake.checkGrid()) {
-                    System.out.println("You've won!");
-                } else {
-                    System.out.println("There are some mistakes...");
-                }
-            }
-            grid.selectTile(this);
-        }
     }
 
     // Compares the value of two tiles.

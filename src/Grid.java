@@ -8,15 +8,21 @@ public class Grid {
     private ArrayList<Column> columns;
     private ArrayList<Cage> cages;
     private ArrayList<Tile> tiles;
+    private CheckMistake checkMistake;
+    private History history;
 
     // The grid class constructor.
     public Grid(int size, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages) {
         this.size = size;
         this.selectedTile = null;
+
         this.rows = rows;
         this.columns = columns;
         this.cages = cages;
         this.tiles = new ArrayList<>();
+
+        this.checkMistake = new CheckMistake(this);
+        this.history = new History(this, checkMistake);
 
         // Populates rows and columns.
         for (int i = 0; i < size; i++) {
@@ -82,5 +88,15 @@ public class Grid {
     // Gets all the tiles in the grid.
     public ArrayList<Tile> getTiles() {
         return tiles;
+    }
+
+    // Gets the mistake checking class.
+    public CheckMistake getCheckMistake() {
+        return checkMistake;
+    }
+
+    // Gets the history class.
+    public History getHistory() {
+        return history;
     }
 }

@@ -18,7 +18,7 @@ public class History {
 
     // Makes a new change on the grid.
     public void addMove(Change change) {
-        undoHistory.push(change);
+        undoHistory.push(currentChange);
         currentChange = change;
 
         // Clears the redo history, if you've just undone.
@@ -30,20 +30,18 @@ public class History {
     // Undoes the last move.
     public void undo() {
         if (!undoHistory.isEmpty()) {
-            Change lastMove = undoHistory.pop();
-            lastMove.getTile().displayNumber(grid, checkMistake, lastMove.getValue());
+            currentChange.getTile().displayNumber(currentChange.getOldValue());
             redoHistory.push(currentChange);
-            currentChange = lastMove;
+            currentChange = undoHistory.pop();
         }
     }
 
     // Redoes the last move.
     public void redo() {
         if (!redoHistory.isEmpty()) {
-            Change nextMove = redoHistory.pop();
-            nextMove.getTile().displayNumber(grid, checkMistake, nextMove.getValue());
             undoHistory.push(currentChange);
-            currentChange = nextMove;
+            currentChange = redoHistory.pop();
+            currentChange.getTile().displayNumber(currentChange.getNewValue());
         }
     }
 }

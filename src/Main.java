@@ -50,8 +50,6 @@ public class Main extends Application {
 
         // Creates a class for the grid and change history.
         Grid grid = new Grid(gridSize, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        CheckMistake checkMistake = new CheckMistake(grid);
-        History history = new History(grid, checkMistake);
 
         // Event handler code for pressing a key.
         mainPane.setOnKeyPressed(keyEvent -> {
@@ -65,14 +63,14 @@ public class Main extends Application {
                 if (key != KeyCode.BACK_SPACE) {
                     for (int i = 0; i <= grid.getSize() - 1; i++) {
                         if (key == codes[i]) {
-                            history.addMove(new Change(grid.getSelected()));
-                            grid.getSelected().displayNumber(grid, checkMistake, key.getCode() - 48);
+                            grid.getHistory().addMove(new Change(grid.getSelected(), key.getCode() - 48));
+                            grid.getSelected().displayNumber(key.getCode() - 48);
                         }
                     }
                 } else {
                     // Removes the value.
-                    history.addMove(new Change(grid.getSelected()));
-                    grid.getSelected().displayNumber(grid, checkMistake, 0);
+                    grid.getHistory().addMove(new Change(grid.getSelected(), 0));
+                    grid.getSelected().displayNumber(0);
                 }
             } catch (NullPointerException e) {
                 System.out.println("No tile has been selected.");
@@ -80,10 +78,10 @@ public class Main extends Application {
         });
 
         // The lambda expression for undoing a change.
-        undoButton.setOnMouseClicked(mouseEvent -> history.undo());
+        undoButton.setOnMouseClicked(mouseEvent -> grid.getHistory().undo());
 
         // The lambda expression for redoing a change.
-        redoButton.setOnMouseClicked(mouseEvent -> history.redo());
+        redoButton.setOnMouseClicked(mouseEvent -> grid.getHistory().redo());
 
         // The event handler code for clearing the grid.
         clearButton.setOnAction(actionEvent -> {
@@ -97,19 +95,19 @@ public class Main extends Application {
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
                         for (Tile tile : grid.getTiles()) {
-                            tile.displayNumber(grid, checkMistake, 0);
+                            tile.displayNumber(0);
                         }
                     });
         });
 
         // The event handler for selecting to check the mistakes.
         mistakesCheck.setOnMouseClicked(mouseEvent -> {
-            checkMistake.setChecked(mistakesCheck.isSelected());
+            grid.getCheckMistake().setChecked(mistakesCheck.isSelected());
 
             // Checks mistake.
-            if (checkMistake.isChecked()) {
+            if (grid.getCheckMistake().isChecked()) {
                 // Tells the user if they have won or not.
-                if (checkMistake.checkGrid()) {
+                if (grid.getCheckMistake().checkGrid()) {
                     System.out.println("You've won!");
                 } else {
                     System.out.println("There are some mistakes...");
@@ -161,8 +159,7 @@ public class Main extends Application {
             numButton.setOnMouseClicked(mouseEvent -> {
                 // Displays the number on the tile.
                 try {
-                    history.addMove(new Change(grid.getSelected()));
-                    grid.getSelected().displayNumber(grid, checkMistake, Integer.parseInt(numButton.getText()));
+                    grid.getSelected().displayNumber(Integer.parseInt(numButton.getText()));
                 } catch (NullPointerException e) {
                     System.out.println("No tile has been selected.");
                 }
