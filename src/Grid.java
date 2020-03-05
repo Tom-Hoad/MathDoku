@@ -155,8 +155,6 @@ public class Grid {
                 for (Tile tile : cageTiles) {
                     if (allTiles.contains(tile)) {
                         throw new Exception("This cage overlaps another cage.");
-                    } else {
-                        allTiles.add(tile);
                     }
                 }
 
@@ -171,26 +169,29 @@ public class Grid {
                 }
 
                 // Check if tiles are all adjacent.
-                for (Tile tile : cageTiles) {
-                    // Finds all possible adjacent positions.
-                    ArrayList<Integer> adjacentPositions = new ArrayList<>();
-                    adjacentPositions.add(tile.getGridPosition() - 1);
-                    adjacentPositions.add(tile.getGridPosition() + 1);
-                    adjacentPositions.add(tile.getGridPosition() + getSize());
-                    adjacentPositions.add(tile.getGridPosition() - getSize());
+                if (cageTiles.size() != 1) {
+                    for (Tile tile : cageTiles) {
+                        // Finds all possible adjacent positions.
+                        ArrayList<Integer> adjacentPositions = new ArrayList<>();
+                        adjacentPositions.add(tile.getGridPosition() - 1);
+                        adjacentPositions.add(tile.getGridPosition() + 1);
+                        adjacentPositions.add(tile.getGridPosition() + getSize());
+                        adjacentPositions.add(tile.getGridPosition() - getSize());
 
-                    boolean adjacentTiles = false;
-                    for (Tile otherTile : cageTiles) {
-                        if (adjacentPositions.contains(otherTile.getGridPosition())) {
-                            adjacentTiles = true;
-                            break;
+                        boolean adjacentTiles = false;
+                        for (Tile otherTile : cageTiles) {
+                            if (adjacentPositions.contains(otherTile.getGridPosition())) {
+                                adjacentTiles = true;
+                                break;
+                            }
                         }
-                    }
-                    if (!adjacentTiles) {
-                        throw new Exception("The tiles in the cage are not adjacent.");
+                        if (!adjacentTiles) {
+                            throw new Exception("The tiles in the cage are not adjacent.");
+                        }
                     }
                 }
 
+                allTiles.addAll(cageTiles);
                 addCage(new Cage(this, result, operation, cageTiles));
             } catch (Exception e) {
                 // COULD BE AN ALERT
@@ -198,6 +199,9 @@ public class Grid {
             }
         }
 
-        // Check if all tiles taken - could default to single tile.
+        // Check if all tiles taken.
+        if (allTiles.size() < Math.pow(getSize(), 2)) {
+            System.out.println("Error: not all tiles are in a cage.");
+        }
     }
 }
