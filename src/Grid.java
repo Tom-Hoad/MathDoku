@@ -16,13 +16,13 @@ public class Grid {
     private History history;
 
     // The grid class constructor.
-    public Grid(int size, ArrayList<Row> rows, ArrayList<Column> columns, ArrayList<Cage> cages, History history) {
-        this.size = size;
+    public Grid(History history) {
+        this.size = 6;
         this.selectedTile = null;
 
-        this.rows = rows;
-        this.columns = columns;
-        this.cages = cages;
+        this.rows = new ArrayList<>();
+        this.columns = new ArrayList<>();
+        this.cages = new ArrayList<>();
         this.tiles = new ArrayList<>();
 
         this.checkMistake = new CheckMistake(this);

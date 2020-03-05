@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -49,12 +48,8 @@ public class Main extends Application {
 
         optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
 
-        // Sets grid pane size parameters.
-        int gridSize = 6;
-        int tileSize = 100;
-
         // Creates a class for the grid and change history.
-        Grid grid = new Grid(gridSize, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),  new History(undoButton, redoButton));
+        Grid grid = new Grid(new History(undoButton, redoButton));
 
         // Event handler code for pressing a key.
         mainPane.setOnKeyPressed(keyEvent -> {
@@ -157,17 +152,37 @@ public class Main extends Application {
             grid.selectTile(grid.getSelected());
         });
 
+        // Adds number buttons to below the grid.
+        for (int i = 0; i < grid.getSize(); i++) {
+            Button numButton = new Button(String.valueOf(i + 1));
+            numButton.setFont(new Font(25));
+            buttonHBox.getChildren().add(numButton);
+
+            // The event handler code for pressing a number button.
+            numButton.setOnMouseClicked(mouseEvent -> {
+                // Displays the number on the tile.
+                try {
+                    grid.getHistory().addMove(new Change(grid.getSelected(), Integer.parseInt(numButton.getText())));
+                    grid.getSelected().displayNumber(Integer.parseInt(numButton.getText()));
+                    grid.getCheckMistake().shouldCheck();
+                    grid.selectTile(grid.getSelected());
+                } catch (NullPointerException e) {
+                    System.out.println("No tile has been selected.");
+                }
+            });
+        }
+
         // Creates the grid pane.
         GridPane gridPane = new GridPane();
         gridPane.setHgap(1);
         gridPane.setVgap(1);
 
         // Fills the grid with tiles.
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
+        for (int i = 0; i < grid.getSize(); i++) {
+            for (int j = 0; j < grid.getSize(); j++) {
                 // Styles the tile.
-                Tile tile = new Tile((i * gridSize) + (j + 1));
-                tile.setPrefSize(tileSize, tileSize);
+                Tile tile = new Tile((i * grid.getSize()) + (j + 1));
+                tile.setPrefSize(100, 100);
                 tile.setDefault();
 
                 // Adds the tile to the grid.
@@ -186,24 +201,6 @@ public class Main extends Application {
                     }
                 });
             }
-
-            // Adds number buttons to below the grid.
-            Button numButton = new Button(String.valueOf(i + 1));
-            numButton.setFont(new Font(25));
-            buttonHBox.getChildren().add(numButton);
-
-            // The event handler code for pressing a number button.
-            numButton.setOnMouseClicked(mouseEvent -> {
-                // Displays the number on the tile.
-                try {
-                    grid.getHistory().addMove(new Change(grid.getSelected(), Integer.parseInt(numButton.getText())));
-                    grid.getSelected().displayNumber(Integer.parseInt(numButton.getText()));
-                    grid.getCheckMistake().shouldCheck();
-                    grid.selectTile(grid.getSelected());
-                } catch (NullPointerException e) {
-                    System.out.println("No tile has been selected.");
-                }
-            });
         }
         grid.findTiles();
 
