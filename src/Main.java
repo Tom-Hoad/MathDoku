@@ -6,9 +6,11 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -103,6 +105,24 @@ public class Main extends Application {
                     });
         });
 
+        // The event handler code for loading a game from a file.
+        loadFileButton.setOnAction(actionEvent -> {
+            // Configures the file chooser menu.
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Game File");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+            // Gets the selected file.
+            File selectedFile = fileChooser.showOpenDialog(stage);
+            if (selectedFile != null) {
+                try {
+                    grid.readFile(selectedFile);
+                } catch (FileNotFoundException e) {
+                    System.out.println(e);
+                }
+            }
+        });
+
         // The event handler code for selecting to check the mistakes.
         mistakesCheck.setOnMouseClicked(mouseEvent -> {
             grid.getCheckMistake().setChecked(mistakesCheck.isSelected());
@@ -159,12 +179,6 @@ public class Main extends Application {
             });
         }
         grid.findTiles();
-
-        // Reads in the cages for the example grid - TEMPORARY CODE
-        Scanner reader = new Scanner(new File("example.txt"));
-        while (reader.hasNextLine()) {
-            grid.addCage(new Cage(grid, reader.nextLine()));
-        }
 
         // Finishes setting up the GUI.
         mainPane.add(optionsHBox, 0, 0);

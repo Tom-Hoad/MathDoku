@@ -1,4 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 // The class for a grid.
 public class Grid {
@@ -100,5 +103,13 @@ public class Grid {
     // Gets the history class.
     public History getHistory() {
         return history;
+    }
+
+    // Displays the cages for a file.
+    public void readFile(File selectedFile) throws FileNotFoundException {
+        Scanner reader = new Scanner(selectedFile);
+        while (reader.hasNextLine()) {
+            addCage(new Cage(this, reader.nextLine()));
+        }
     }
 }

@@ -19,7 +19,11 @@ public class Tile extends StackPane implements Comparable<Tile> {
 
     // Defaults the tile.
     public void setDefault() {
-        this.setStyle(style + border);
+        if (border != null) {
+            this.setStyle(style + border);
+        } else {
+            this.setStyle(style);
+        }
     }
 
     // Adds border to the tile.
