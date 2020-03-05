@@ -117,32 +117,34 @@ public class Main extends Application {
 
             // Gets the selected file.
             File selectedFile = fileChooser.showOpenDialog(stage);
-            if (selectedFile != null) {
-                try {
-                    grid.readFile(selectedFile);
-                } catch (FileNotFoundException e) {
-                    System.out.println(e);
-                }
+            try {
+                grid.readFile(selectedFile);
+            } catch (FileNotFoundException e) {
+                System.out.println(e);
             }
         });
 
         // The event handler code for loading a game from a text input.
         loadTextButton.setOnAction(actionEvent -> {
+            // Configures the dialog box.
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setTitle("Enter Game Text");
             dialog.setHeaderText("Enter Game Text");
 
+            // Adds buttons to the dialog box.
             dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
+            // Formats a grid for the dialog box.
             GridPane dialogPane = new GridPane();
             dialogPane.setAlignment(Pos.CENTER);
             dialogPane.setPadding(new Insets(10, 10, 10, 10));
 
+            // Adds a text field in the dialog box.
             TextArea textArea = new TextArea();
             dialogPane.getChildren().add(textArea);
-
             dialog.getDialogPane().setContent(dialogPane);
 
+            // Reads the text when the OK.
             dialog.showAndWait()
                     .filter(response -> response == ButtonType.OK)
                     .ifPresent(response -> {
