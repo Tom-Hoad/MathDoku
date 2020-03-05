@@ -145,6 +145,8 @@ public class Grid {
     // Checks if it can read a grid.
     public void checkCages(ArrayList<String> splitCages) {
         ArrayList<Tile> allTiles = new ArrayList<>();
+        ArrayList<Cage> validCages = new ArrayList<>();
+        boolean valid = true;
 
         for (String textCage : splitCages) {
             try {
@@ -200,10 +202,11 @@ public class Grid {
                 }
 
                 allTiles.addAll(cageTiles);
-                addCage(new Cage(this, result, operation, cageTiles));
+                validCages.add(new Cage(this, result, operation, cageTiles));
             } catch (Exception e) {
                 // COULD BE AN ALERT
                 System.out.println("Error: " + textCage + " is not a valid cage. Reason: " + e.getMessage());
+                valid = false;
             }
         }
 
@@ -218,6 +221,14 @@ public class Grid {
             }
             if (!found) {
                 System.out.println("Error: the tile at " + i + " is not in a cage.");
+                valid = false;
+            }
+        }
+
+        // Adds the cages to the grid.
+        if (valid) {
+            for (Cage cage : validCages) {
+                addCage(cage);
             }
         }
     }
