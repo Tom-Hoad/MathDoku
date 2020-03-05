@@ -1,6 +1,10 @@
+import javafx.scene.shape.Path;
+
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 // The class for a grid.
@@ -106,14 +110,17 @@ public class Grid {
     }
 
     // Displays the cages from a file.
-    public void readFile(File selectedFile) throws FileNotFoundException {
+    public void readFile(File selectedFile) throws IOException {
         if (selectedFile != null) {
             this.cages = new ArrayList<>();
-            Scanner reader = new Scanner(selectedFile);
+            ArrayList<String> splitFile = new ArrayList<>();
 
+            Scanner reader = new Scanner(selectedFile);
             while (reader.hasNextLine()) {
-                addCage(new Cage(this, reader.nextLine()));
+                splitFile.add(reader.nextLine());
             }
+
+            checkCages(splitFile);
         }
     }
 
@@ -123,8 +130,22 @@ public class Grid {
             this.cages = new ArrayList<>();
             String[] splitText = gameText.split("\\n");
 
-            for (String cageText : splitText) {
-                addCage(new Cage(this, cageText));
+            checkCages(new ArrayList<>(Arrays.asList(splitText)));
+        }
+    }
+
+    // Checks if it can read a grid.
+    public void checkCages(ArrayList<String> splitCages) {
+        for (String textCage : splitCages) {
+            try {
+                int cageSplit = textCage.indexOf(" ");
+                int result = Integer.parseInt(textCage.substring(0, cageSplit - 1));
+                String operation = textCage.substring(cageSplit - 1, cageSplit);
+                String[] tilePositions = textCage.substring(cageSplit + 1).split(",");
+
+                addCage(new Cage(this, result, operation, tilePositions));
+            } catch (Exception e) {
+                System.out.println("Error: " + textCage + " is not a valid cage!");
             }
         }
     }

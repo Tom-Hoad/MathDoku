@@ -10,7 +10,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main extends Application {
@@ -115,8 +115,8 @@ public class Main extends Application {
             File selectedFile = fileChooser.showOpenDialog(stage);
             try {
                 grid.readFile(selectedFile);
-            } catch (FileNotFoundException e) {
-                System.out.println(e);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
 
@@ -143,9 +143,7 @@ public class Main extends Application {
             // Reads the text when the OK.
             dialog.showAndWait()
                     .filter(response -> response == ButtonType.OK)
-                    .ifPresent(response -> {
-                        grid.readText(textArea.getText());
-                    });
+                    .ifPresent(response -> grid.readText(textArea.getText()));
         });
 
         // The event handler code for selecting to check the mistakes.

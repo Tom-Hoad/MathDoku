@@ -13,15 +13,11 @@ public class Cage {
     private ArrayList<Tile> cageTiles;
 
     // The cage class constructor.
-    public Cage(Grid grid, String cageDefinition) {
+    public Cage(Grid grid, int result, String operation, String[] tilePositions) {
         this.grid = grid;
+        this.result = result;
+        this.operation = operation;
 
-        int cageSplit = cageDefinition.indexOf(" ");
-        this.result = Integer.parseInt(cageDefinition.substring(0, cageSplit - 1));
-        this.operation = cageDefinition.substring(cageSplit - 1, cageSplit);
-
-        // Finds the tiles that belong to the cage.
-        String[] tilePositions = cageDefinition.substring(cageSplit + 1).split(",");
         this.cageTiles = new ArrayList<>();
         for (String tilePosition : tilePositions) {
             cageTiles.add(grid.getTiles().get(Integer.parseInt(tilePosition) - 1));
