@@ -109,10 +109,18 @@ public class Grid {
         return history;
     }
 
+    // Removes all the cages.
+    public void removeCages() {
+        for (Cage cage : cages) {
+            cage.removeCage();
+        }
+        this.cages = new ArrayList<>();
+    }
+
     // Displays the cages from a file.
     public void readFile(File selectedFile) throws IOException {
         if (selectedFile != null) {
-            this.cages = new ArrayList<>();
+            removeCages();
             ArrayList<String> splitFile = new ArrayList<>();
 
             Scanner reader = new Scanner(selectedFile);
@@ -127,7 +135,7 @@ public class Grid {
     // Displays the cages from text.
     public void readText(String gameText) {
         if (!gameText.isEmpty()) {
-            this.cages = new ArrayList<>();
+            removeCages();
             String[] splitText = gameText.split("\\n");
 
             checkCages(new ArrayList<>(Arrays.asList(splitText)));
