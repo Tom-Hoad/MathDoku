@@ -19,6 +19,10 @@ public class Main extends Application {
     public void start(Stage stage) {
         stage.setTitle("MathDoku");
 
+        // Creates a game title.
+        Label title = new Label("MathDoku");
+        title.setFont(new Font(40));
+
         // Creates the main pane.
         GridPane mainPane = new GridPane();
         mainPane.setPadding(new Insets(10, 10, 10, 10));
@@ -185,7 +189,7 @@ public class Main extends Application {
 
             // Adds number buttons to below the grid.
             Button numButton = new Button(String.valueOf(i + 1));
-            numButton.setFont(new Font(30));
+            numButton.setFont(new Font(25));
             buttonHBox.getChildren().add(numButton);
 
             // The event handler code for pressing a number button.
@@ -204,9 +208,10 @@ public class Main extends Application {
         grid.findTiles();
 
         // Finishes setting up the GUI.
-        mainPane.add(optionsHBox, 0, 0);
-        mainPane.add(gridPane, 0, 1);
-        mainPane.add(buttonHBox, 0, 2);
+        mainPane.add(title, 0, 0);
+        mainPane.add(optionsHBox, 0, 1);
+        mainPane.add(gridPane, 0, 2);
+        mainPane.add(buttonHBox, 0, 3);
         Scene scene = new Scene(mainPane);
         stage.setScene(scene);
         stage.setResizable(true);
