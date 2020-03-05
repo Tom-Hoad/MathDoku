@@ -136,6 +136,8 @@ public class Grid {
 
     // Checks if it can read a grid.
     public void checkCages(ArrayList<String> splitCages) {
+        ArrayList<Tile> allTiles = new ArrayList<>();
+
         for (String textCage : splitCages) {
             try {
                 // Gets the result and operation.
@@ -150,17 +152,49 @@ public class Grid {
                 }
 
                 // Check if already taken.
+                for (Tile tile : cageTiles) {
+                    if (allTiles.contains(tile)) {
+                        throw new Exception("This cage overlaps another cage.");
+                    } else {
+                        allTiles.add(tile);
+                    }
+                }
 
                 // Check if valid symbol.
+                if (!operation.equals("+") && !operation.equals("-") && !operation.equals("÷") && !operation.equals("x")) {
+                    throw new Exception("This cage doesn't contain a valid symbol.");
+                }
 
                 // Check if valid result / single tile.
+                if (cageTiles.size() == 1 && (result > 6 || result < 1)) {
+                    throw new Exception("This cage cannot achieve its result.");
+                }
 
                 // Check if tiles are all adjacent.
+                for (Tile tile : cageTiles) {
+                    // Finds all possible adjacent positions.
+                    ArrayList<Integer> adjacentPositions = new ArrayList<>();
+                    adjacentPositions.add(tile.getGridPosition() - 1);
+                    adjacentPositions.add(tile.getGridPosition() + 1);
+                    adjacentPositions.add(tile.getGridPosition() + getSize());
+                    adjacentPositions.add(tile.getGridPosition() - getSize());
+
+                    boolean adjacentTiles = false;
+                    for (Tile otherTile : cageTiles) {
+                        if (adjacentPositions.contains(otherTile.getGridPosition())) {
+                            adjacentTiles = true;
+                            break;
+                        }
+                    }
+                    if (!adjacentTiles) {
+                        throw new Exception("The tiles in the cage are not adjacent.");
+                    }
+                }
 
                 addCage(new Cage(this, result, operation, cageTiles));
             } catch (Exception e) {
                 // COULD BE AN ALERT
-                System.out.println("Error: " + textCage + " is not a valid cage!");
+                System.out.println("Error: " + textCage + " is not a valid cage. Reason: " + e.getMessage());
             }
         }
 
