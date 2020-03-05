@@ -138,15 +138,32 @@ public class Grid {
     public void checkCages(ArrayList<String> splitCages) {
         for (String textCage : splitCages) {
             try {
+                // Gets the result and operation.
                 int cageSplit = textCage.indexOf(" ");
                 int result = Integer.parseInt(textCage.substring(0, cageSplit - 1));
                 String operation = textCage.substring(cageSplit - 1, cageSplit);
-                String[] tilePositions = textCage.substring(cageSplit + 1).split(",");
 
-                addCage(new Cage(this, result, operation, tilePositions));
+                // Gets the tile.
+                ArrayList<Tile> cageTiles = new ArrayList<>();
+                for (String tilePosition : textCage.substring(cageSplit + 1).split(",")) {
+                    cageTiles.add(getTiles().get(Integer.parseInt(tilePosition) - 1));
+                }
+
+                // Check if already taken.
+
+                // Check if valid symbol.
+
+                // Check if valid result / single tile.
+
+                // Check if tiles are all adjacent.
+
+                addCage(new Cage(this, result, operation, cageTiles));
             } catch (Exception e) {
+                // COULD BE AN ALERT
                 System.out.println("Error: " + textCage + " is not a valid cage!");
             }
         }
+
+        // Check if all tiles taken - could default to single tile.
     }
 }
