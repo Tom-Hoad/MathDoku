@@ -208,8 +208,17 @@ public class Grid {
         }
 
         // Check if all tiles taken.
-        if (allTiles.size() < Math.pow(getSize(), 2)) {
-            System.out.println("Error: not all tiles are in a cage.");
+        for (int i = 1; i <= Math.pow(getSize(), 2); i++) {
+            boolean found = false;
+            for (Tile tile : allTiles) {
+                if (tile.getGridPosition() == i) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                System.out.println("Error: the tile at " + i + " is not in a cage.");
+            }
         }
     }
 }
