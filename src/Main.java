@@ -45,39 +45,14 @@ public class Main extends Application {
         Button loadTextButton = new Button("Load from Text");
         Label mistakesLabel = new Label("Click to check the grid:");
         CheckBox mistakesCheck = new CheckBox();
-
         optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
 
         // Creates a class for the grid and change history.
+        // Creates the grid pane.
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(1);
+        gridPane.setVgap(1);
         Grid grid = new Grid(new History(undoButton, redoButton));
-
-        // Event handler code for pressing a key.
-        mainPane.setOnKeyPressed(keyEvent -> {
-            // Returns the number pressed.
-            KeyCode key = keyEvent.getCode();
-            KeyCode[] codes = {KeyCode.DIGIT1, KeyCode.DIGIT2, KeyCode.DIGIT3, KeyCode.DIGIT4,
-                    KeyCode.DIGIT5, KeyCode.DIGIT6, KeyCode.DIGIT7, KeyCode.DIGIT8};
-
-            // Displays the number on the tile.
-            try {
-                if (key != KeyCode.BACK_SPACE) {
-                    for (int i = 0; i <= grid.getSize() - 1; i++) {
-                        if (key == codes[i]) {
-                            grid.getHistory().addMove(new Change(grid.getSelected(), key.getCode() - 48));
-                            grid.getSelected().displayNumber(key.getCode() - 48);
-                        }
-                    }
-                } else {
-                    // Removes the value.
-                    grid.getHistory().addMove(new Change(grid.getSelected(), 0));
-                    grid.getSelected().displayNumber(0);
-                }
-                grid.getCheckMistake().shouldCheck();
-                grid.selectTile(grid.getSelected());
-            } catch (NullPointerException e) {
-                System.out.println("No tile has been selected.");
-            }
-        });
 
         // The lambda expression for undoing a change.
         undoButton.setOnMouseClicked(mouseEvent -> grid.getHistory().undo());
@@ -172,10 +147,33 @@ public class Main extends Application {
             });
         }
 
-        // Creates the grid pane.
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(1);
-        gridPane.setVgap(1);
+        // Event handler code for pressing a key.
+        mainPane.setOnKeyPressed(keyEvent -> {
+            // Returns the number pressed.
+            KeyCode key = keyEvent.getCode();
+            KeyCode[] codes = {KeyCode.DIGIT1, KeyCode.DIGIT2, KeyCode.DIGIT3, KeyCode.DIGIT4,
+                    KeyCode.DIGIT5, KeyCode.DIGIT6, KeyCode.DIGIT7, KeyCode.DIGIT8};
+
+            // Displays the number on the tile.
+            try {
+                if (key != KeyCode.BACK_SPACE) {
+                    for (int i = 0; i <= grid.getSize() - 1; i++) {
+                        if (key == codes[i]) {
+                            grid.getHistory().addMove(new Change(grid.getSelected(), key.getCode() - 48));
+                            grid.getSelected().displayNumber(key.getCode() - 48);
+                        }
+                    }
+                } else {
+                    // Removes the value.
+                    grid.getHistory().addMove(new Change(grid.getSelected(), 0));
+                    grid.getSelected().displayNumber(0);
+                }
+                grid.getCheckMistake().shouldCheck();
+                grid.selectTile(grid.getSelected());
+            } catch (NullPointerException e) {
+                System.out.println("No tile has been selected.");
+            }
+        });
 
         // Fills the grid with tiles.
         for (int i = 0; i < grid.getSize(); i++) {
@@ -215,8 +213,8 @@ public class Main extends Application {
         stage.show();
     }
 
+    // Launches the game.
     public static void main(String[] args) {
-        // Launches the game.
         launch(args);
     }
 }

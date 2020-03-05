@@ -155,7 +155,7 @@ public class Grid {
                 // Gets the tile.
                 ArrayList<Tile> cageTiles = new ArrayList<>();
                 for (String tilePosition : textCage.substring(cageSplit + 1).split(",")) {
-                    cageTiles.add(getTiles().get(Integer.parseInt(tilePosition) - 1));
+                    cageTiles.add(tiles.get(Integer.parseInt(tilePosition) - 1));
                 }
 
                 // Check if already taken.
