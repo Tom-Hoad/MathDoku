@@ -105,11 +105,24 @@ public class Grid {
         return history;
     }
 
-    // Displays the cages for a file.
+    // Displays the cages from a file.
     public void readFile(File selectedFile) throws FileNotFoundException {
+        this.cages = new ArrayList<>();
+
         Scanner reader = new Scanner(selectedFile);
         while (reader.hasNextLine()) {
             addCage(new Cage(this, reader.nextLine()));
+        }
+    }
+
+    // Displays the cages from text.
+    public void readText(String gameText) {
+        this.cages = new ArrayList<>();
+
+        String[] splitText = gameText.split("\\n");
+
+        for (String cageText : splitText) {
+            addCage(new Cage(this, cageText));
         }
     }
 }

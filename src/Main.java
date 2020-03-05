@@ -6,12 +6,15 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main extends Application {
@@ -121,6 +124,30 @@ public class Main extends Application {
                     System.out.println(e);
                 }
             }
+        });
+
+        // The event handler code for loading a game from a text input.
+        loadTextButton.setOnAction(actionEvent -> {
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setTitle("Enter Game Text");
+            dialog.setHeaderText("Enter Game Text");
+
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+            GridPane dialogPane = new GridPane();
+            dialogPane.setAlignment(Pos.CENTER);
+            dialogPane.setPadding(new Insets(10, 10, 10, 10));
+
+            TextArea textArea = new TextArea();
+            dialogPane.getChildren().add(textArea);
+
+            dialog.getDialogPane().setContent(dialogPane);
+
+            dialog.showAndWait()
+                    .filter(response -> response == ButtonType.OK)
+                    .ifPresent(response -> {
+                        grid.readText(textArea.getText());
+                    });
         });
 
         // The event handler code for selecting to check the mistakes.
