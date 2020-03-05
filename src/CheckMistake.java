@@ -35,12 +35,17 @@ public class CheckMistake {
                 winAlert.setContentText("You've won this game of MathDoku!");
 
                 winAlert.show();
+                correctTiles();
             }
         } else {
-            // Corrects all tiles.
-            for (Tile tile : grid.getTiles()) {
-                tile.correctTile();
-            }
+            correctTiles();
+        }
+    }
+
+    // Corrects all the tiles.
+    public void correctTiles() {
+        for (Tile tile : grid.getTiles()) {
+            tile.correctTile();
         }
     }
 

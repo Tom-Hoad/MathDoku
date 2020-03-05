@@ -6,21 +6,17 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Scanner;
 
 public class Main extends Application {
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         stage.setTitle("MathDoku");
 
         // Creates the main pane.
@@ -44,7 +40,7 @@ public class Main extends Application {
         Button clearButton = new Button("Clear Grid");
         Button loadFileButton = new Button("Load from File");
         Button loadTextButton = new Button("Load from Text");
-        Label mistakesLabel = new Label("Click to show mistakes:");
+        Label mistakesLabel = new Label("Click to check the grid:");
         CheckBox mistakesCheck = new CheckBox();
 
         optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
@@ -221,10 +217,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         // Launches the game.
-        try {
-            launch(args);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        launch(args);
     }
 }
