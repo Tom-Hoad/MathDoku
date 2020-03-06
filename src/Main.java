@@ -3,6 +3,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -46,7 +50,9 @@ public class Main extends Application {
         Button loadTextButton = new Button("Load from Text");
         Label mistakesLabel = new Label("Click to check the grid:");
         CheckBox mistakesCheck = new CheckBox();
-        optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
+        ChoiceBox<String> fontChoice = new ChoiceBox<>();
+        fontChoice.getItems().addAll("Small", "Medium", "Large");
+        optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck, fontChoice);
 
         // Creates a class for the grid and history.
         GridPane gridPane = new GridPane();
@@ -127,6 +133,9 @@ public class Main extends Application {
             grid.getCheckMistake().shouldCheck();
             grid.selectTile(grid.getSelected());
         });
+
+        // The lambda expression for changing the font.
+        fontChoice.getSelectionModel().selectedItemProperty().addListener((font, oldFont, newFont) -> System.out.println(newFont));
 
         // Event handler code for pressing a key.
         mainPane.setOnKeyPressed(keyEvent -> {
