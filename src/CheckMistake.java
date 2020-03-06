@@ -8,15 +8,11 @@ import java.util.Collections;
 public class CheckMistake {
     private Grid grid;
     private boolean isChecked;
-    private ArrayList<String> strPermutations;
-    private ArrayList<ArrayList<Integer>> permutations;
 
     // The check mistake class constructor.
     public CheckMistake(Grid grid) {
         this.grid = grid;
         this.isChecked = false;
-        this.strPermutations = new ArrayList<>();
-        this.permutations = new ArrayList<>();
     }
 
     // Sets the result of the mistake checkbox.
@@ -145,12 +141,7 @@ public class CheckMistake {
         }
         int expectedHash = Arrays.hashCode(expectedTiles);
 
-        correct = checkRows(expectedHash, correct);
-        return checkColumns(expectedHash, correct);
-    }
-
-    // Checks rows if correct.
-    public boolean checkRows(int expectedHash, boolean correct) {
+        // Checks rows if correct.
         for (Row row : grid.getRows()) {
             ArrayList<Tile> rowTiles = row.getRowTiles();
 
@@ -169,11 +160,8 @@ public class CheckMistake {
                 correct = false;
             }
         }
-        return correct;
-    }
 
-    // Checks columns if correct.
-    public boolean checkColumns(int expectedHash, boolean correct) {
+        // Checks columns if correct.
         for (Column column : grid.getColumns()) {
             ArrayList<Tile> columnTiles = column.getColumnTiles();
 

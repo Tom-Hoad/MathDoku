@@ -1,3 +1,5 @@
+import javafx.scene.layout.GridPane;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,54 +9,73 @@ import java.util.Scanner;
 // The class for a grid.
 public class Grid {
     private int size;
-    private Tile selectedTile;
+    private GridPane gridPane;
     private ArrayList<Row> rows;
     private ArrayList<Column> columns;
     private ArrayList<Cage> cages;
     private ArrayList<Tile> tiles;
+    private Tile selectedTile;
     private CheckMistake checkMistake;
     private History history;
 
     // The grid class constructor.
-    public Grid(History history) {
-        this.size = 6;
-        this.selectedTile = null;
+    public Grid(GridPane gridPane, History history) {
+        this.gridPane = gridPane;
 
         this.rows = new ArrayList<>();
         this.columns = new ArrayList<>();
         this.cages = new ArrayList<>();
         this.tiles = new ArrayList<>();
 
+        this.selectedTile = null;
         this.checkMistake = new CheckMistake(this);
         this.history = history;
+    }
+
+    // Creates the grid on the pane.
+    public void displayGrid(int size) {
+        this.size = size;
+        gridPane.getChildren().clear();
 
         // Populates rows and columns.
         for (int i = 0; i < size; i++) {
             rows.add(new Row(new ArrayList<>()));
             columns.add(new Column(new ArrayList<>()));
         }
-    }
 
-    // Adds a tile to a row.
-    public void addToRow(int rowNum, Tile tile) {
-        rows.get(rowNum).addTo(tile);
-    }
+        // Fills the grid with tiles.
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                // Styles the tile.
+                Tile tile = new Tile((i * size) + (j + 1));
+                tile.setPrefSize(100, 100);
+                tile.setDefault();
 
-    // Adds a tile to a column.
-    public void addToColumn(int columnNum, Tile tile) {
-        columns.get(columnNum).addTo(tile);
-    }
+                // Adds the tile to the grid.
+                rows.get(j).addTo(tile);
+                columns.get(i).addTo(tile);
+                gridPane.add(tile, j, i);
 
-    // Adds a cage to the grid.
-    public void addCage(Cage cage) {
-        cages.add(cage);
-        cage.showCage();
-    }
-
-    // Finds all the tiles in the grid.
-    public void findTiles() {
+                // Event handler code for click a tile.
+                tile.setOnMouseClicked(mouseEvent -> {
+                    try {
+                        // Defaults the selected tile and selects the new tile.
+                        selectedTile.setDefault();
+                        selectTile(tile);
+                    } catch (NullPointerException e) {
+                        selectTile(tile);
+                    }
+                });
+            }
+        }
+        // Finds all the tiles in the grid.
         for (Column column : columns) {
             tiles.addAll(column.getColumnTiles());
+        }
+
+        // Displays all the cages.
+        for (Cage cage : cages) {
+            cage.showCage();
         }
     }
 
@@ -155,7 +176,7 @@ public class Grid {
                 // Gets the tile.
                 ArrayList<Tile> cageTiles = new ArrayList<>();
                 for (String tilePosition : textCage.substring(cageSplit + 1).split(",")) {
-                    cageTiles.add(tiles.get(Integer.parseInt(tilePosition) - 1));
+                    cageTiles.add(new Tile(Integer.parseInt(tilePosition)));
                 }
 
                 // Check if already taken.
@@ -224,9 +245,15 @@ public class Grid {
 
         // Adds the cages to the grid.
         if (valid) {
-            for (Cage cage : validCages) {
-                addCage(cage);
+            cages.addAll(validCages);
+
+            int maxPosition = 1;
+            for (Tile tile : allTiles) {
+                if (tile.getGridPosition() > maxPosition) {
+                    maxPosition = tile.getGridPosition();
+                }
             }
+            displayGrid((int) Math.sqrt(maxPosition));
         }
     }
 }

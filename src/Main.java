@@ -52,7 +52,7 @@ public class Main extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(1);
         gridPane.setVgap(1);
-        Grid grid = new Grid(new History(undoButton, redoButton));
+        Grid grid = new Grid(gridPane, new History(undoButton, redoButton));
 
         // The lambda expression for undoing a change.
         undoButton.setOnMouseClicked(mouseEvent -> grid.getHistory().undo());
@@ -174,33 +174,6 @@ public class Main extends Application {
                 System.out.println("No tile has been selected.");
             }
         });
-
-        // Fills the grid with tiles.
-        for (int i = 0; i < grid.getSize(); i++) {
-            for (int j = 0; j < grid.getSize(); j++) {
-                // Styles the tile.
-                Tile tile = new Tile((i * grid.getSize()) + (j + 1));
-                tile.setPrefSize(100, 100);
-                tile.setDefault();
-
-                // Adds the tile to the grid.
-                grid.addToRow(j, tile);
-                grid.addToColumn(i, tile);
-                gridPane.add(tile, j, i);
-
-                // Event handler code for click a tile.
-                tile.setOnMouseClicked(mouseEvent -> {
-                    try {
-                        // Defaults the selected tile and selects the new tile.
-                        grid.getSelected().setDefault();
-                        grid.selectTile(tile);
-                    } catch (NullPointerException e) {
-                        grid.selectTile(tile);
-                    }
-                });
-            }
-        }
-        grid.findTiles();
 
         // Finishes setting up the GUI.
         mainPane.add(title, 0, 0);
