@@ -105,7 +105,7 @@ public class Grid {
             this.size = (int) Math.sqrt(maxPosition);
 
             if (size <= 8 && size >= 2) {
-                //checkCages();
+                checkCages();
                 createGrid();
                 displayGrid();
             } else {
@@ -123,10 +123,9 @@ public class Grid {
         int[] positionCount = new int[size * size];
         for (Tile tile : tiles) {
             int tilePosition = tile.getGridPosition();
-            if (positionCount[tilePosition] != 0) {
+            positionCount[tilePosition - 1] = tilePosition;
+            if (positionCount[tilePosition - 1] == 0) {
                 throw new Exception();
-            } else {
-                positionCount[tilePosition] = tilePosition;
             }
         }
 
@@ -148,18 +147,29 @@ public class Grid {
 
         // Check for disconnected cages.
         for (Cage cage : cages) {
-            for (Tile tile : cage.getCageTiles()) {
-                int position = tile.getGridPosition();
-                for (Tile otherTile : cage.getCageTiles()) {
-                    ArrayList<Integer> adjacentPositions = new ArrayList<>();
-                    adjacentPositions.add(position + 1);
-                    adjacentPositions.add(position - 1);
-                    adjacentPositions.add(position + size);
-                    adjacentPositions.add(position - size);
+            int[] cagePositions = new int[cage.getCageTiles().size()];
 
-                    if (!adjacentPositions.contains(otherTile.getGridPosition())) {
-                        throw new Exception();
+            // Creates an array of all cage tiles.
+            for (int i = 0; i < cagePositions.length; i++) {
+                cagePositions[i] = cage.getCageTiles().get(i).getGridPosition();
+            }
+
+            // Checks if any of the cage positions appear in an adjacent position.
+            for (Tile tile : cage.getCageTiles()) {
+                boolean found = false;
+                int position = tile.getGridPosition();
+                int[] adjacentPositions = {position + 1, position - 1, position + size, position - size};
+
+                for (int cagePosition : cagePositions) {
+                    for (int adjacentPosition : adjacentPositions) {
+                        if (cagePosition == adjacentPosition) {
+                            found = true;
+                            break;
+                        }
                     }
+                }
+                if (!found) {
+                    throw new Exception();
                 }
             }
         }
