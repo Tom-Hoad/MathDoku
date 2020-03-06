@@ -47,12 +47,11 @@ public class Main extends Application {
         CheckBox mistakesCheck = new CheckBox();
         optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck);
 
-        // Creates a class for the grid and change history.
-        // Creates the grid pane.
+        // Creates a class for the grid and history.
         GridPane gridPane = new GridPane();
         gridPane.setHgap(1);
         gridPane.setVgap(1);
-        Grid grid = new Grid(gridPane, new History(undoButton, redoButton));
+        Grid grid = new Grid(gridPane, buttonHBox, new History(undoButton, redoButton));
 
         // The lambda expression for undoing a change.
         undoButton.setOnMouseClicked(mouseEvent -> grid.getHistory().undo());
@@ -126,26 +125,6 @@ public class Main extends Application {
             grid.getCheckMistake().shouldCheck();
             grid.selectTile(grid.getSelected());
         });
-
-        // Adds number buttons to below the grid.
-        for (int i = 0; i < grid.getSize(); i++) {
-            Button numButton = new Button(String.valueOf(i + 1));
-            numButton.setFont(new Font(25));
-            buttonHBox.getChildren().add(numButton);
-
-            // The event handler code for pressing a number button.
-            numButton.setOnMouseClicked(mouseEvent -> {
-                // Displays the number on the tile.
-                try {
-                    grid.getHistory().addMove(new Change(grid.getSelected(), Integer.parseInt(numButton.getText())));
-                    grid.getSelected().displayNumber(Integer.parseInt(numButton.getText()));
-                    grid.getCheckMistake().shouldCheck();
-                    grid.selectTile(grid.getSelected());
-                } catch (NullPointerException e) {
-                    System.out.println("No tile has been selected.");
-                }
-            });
-        }
 
         // Event handler code for pressing a key.
         mainPane.setOnKeyPressed(keyEvent -> {

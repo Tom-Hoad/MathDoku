@@ -6,6 +6,8 @@ import javafx.scene.text.Font;
 public class Tile extends StackPane implements Comparable<Tile> {
     private int gridPosition;
     private int value;
+    private int row;
+    private int column;
     private String style;
     private String border;
 
@@ -74,6 +76,26 @@ public class Tile extends StackPane implements Comparable<Tile> {
 
         label.setFont(new Font(50));
         getChildren().add(0, label);
+    }
+
+    // Gets the row the tiles on.
+    public int getRow() {
+        return row;
+    }
+
+    // Sets the row the tiles on.
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    // Gets the column the tiles on.
+    public int getColumn() {
+        return column;
+    }
+
+    // Sets the column the tiles on.
+    public void setColumn(int column) {
+        this.column = column;
     }
 
     // Compares the value of two tiles.

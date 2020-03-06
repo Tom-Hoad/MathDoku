@@ -1,4 +1,7 @@
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +13,7 @@ import java.util.Scanner;
 public class Grid {
     private int size;
     private GridPane gridPane;
+    private HBox buttonHBox;
     private ArrayList<Row> rows;
     private ArrayList<Column> columns;
     private ArrayList<Cage> cages;
@@ -19,42 +23,55 @@ public class Grid {
     private History history;
 
     // The grid class constructor.
-    public Grid(GridPane gridPane, History history) {
+    public Grid(GridPane gridPane, HBox buttonHBox, History history) {
         this.gridPane = gridPane;
-
-        this.rows = new ArrayList<>();
-        this.columns = new ArrayList<>();
-        this.cages = new ArrayList<>();
-        this.tiles = new ArrayList<>();
+        this.buttonHBox = buttonHBox;
 
         this.selectedTile = null;
         this.checkMistake = new CheckMistake(this);
         this.history = history;
     }
 
-    // Creates the grid on the pane.
-    public void displayGrid(int size) {
-        this.size = size;
-        gridPane.getChildren().clear();
+    // Displays the cages from a file.
+    public void readFile(File selectedFile) throws IOException {
+        if (selectedFile != null) {
+            ArrayList<String> splitFile = new ArrayList<>();
 
-        // Populates rows and columns.
-        for (int i = 0; i < size; i++) {
-            rows.add(new Row(new ArrayList<>()));
-            columns.add(new Column(new ArrayList<>()));
+            Scanner reader = new Scanner(selectedFile);
+            while (reader.hasNextLine()) {
+                splitFile.add(reader.nextLine());
+            }
+
+            translateCages(splitFile);
         }
+    }
 
-        // Fills the grid with tiles.
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                // Styles the tile.
-                Tile tile = new Tile((i * size) + (j + 1));
+    // Displays the cages from text.
+    public void readText(String gameText) {
+        if (!gameText.isEmpty()) {
+            String[] splitText = gameText.split("\\n");
+
+            translateCages(new ArrayList<>(Arrays.asList(splitText)));
+        }
+    }
+
+    // Translates the text and converts it into cages.
+    public void translateCages(ArrayList<String> splitCages) {
+        this.cages = new ArrayList<>();
+        this.tiles = new ArrayList<>();
+
+        for (String textCage : splitCages) {
+            // Gets the result and operation.
+            int cageSplit = textCage.indexOf(" ");
+            int result = Integer.parseInt(textCage.substring(0, cageSplit - 1));
+            String operation = textCage.substring(cageSplit - 1, cageSplit);
+
+            // Creates the cage.
+            ArrayList<Tile> cageTiles = new ArrayList<>();
+            for (String tilePosition : textCage.substring(cageSplit + 1).split(",")) {
+                Tile tile = new Tile(Integer.parseInt(tilePosition));
                 tile.setPrefSize(100, 100);
                 tile.setDefault();
-
-                // Adds the tile to the grid.
-                rows.get(j).addTo(tile);
-                columns.get(i).addTo(tile);
-                gridPane.add(tile, j, i);
 
                 // Event handler code for click a tile.
                 tile.setOnMouseClicked(mouseEvent -> {
@@ -66,16 +83,71 @@ public class Grid {
                         selectTile(tile);
                     }
                 });
+
+                tiles.add(tile);
+                cageTiles.add(tile);
             }
-        }
-        // Finds all the tiles in the grid.
-        for (Column column : columns) {
-            tiles.addAll(column.getColumnTiles());
+            cages.add(new Cage(this, result, operation, cageTiles));
         }
 
-        // Displays all the cages.
-        for (Cage cage : cages) {
-            cage.showCage();
+        // Determines the size of the array.
+        int maxPosition = 1;
+        for (Tile tile : tiles) {
+            if (tile.getGridPosition() > maxPosition) {
+                maxPosition = tile.getGridPosition();
+            }
+        }
+        this.size = (int) Math.sqrt(maxPosition);
+
+        createGrid();
+    }
+
+    // Creates the grid on the pane.
+    public void createGrid() {
+        // Creates the rows and columns.
+        rows = new ArrayList<>();
+        columns = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            rows.add(new Row(new ArrayList<>()));
+            columns.add(new Column(new ArrayList<>()));
+        }
+
+        // Adds the tiles to the rows and columns.
+        for (Tile tile : tiles) {
+            tile.setRow((int) Math.floor(((double) tile.getGridPosition() - 1) / size));
+            tile.setColumn((tile.getGridPosition() - 1) % size);
+
+            rows.get(tile.getRow()).addTo(tile);
+            columns.get(tile.getRow()).addTo(tile);
+        }
+
+        // Adds number buttons to below the grid.
+        for (int i = 0; i < size; i++) {
+            Button numButton = new Button(String.valueOf(i + 1));
+            numButton.setFont(new Font(25));
+            buttonHBox.getChildren().add(numButton);
+
+            // The event handler code for pressing a number button.
+            numButton.setOnMouseClicked(mouseEvent -> {
+                // Displays the number on the tile.
+                try {
+                    history.addMove(new Change(selectedTile, Integer.parseInt(numButton.getText())));
+                    selectedTile.displayNumber(Integer.parseInt(numButton.getText()));
+                    checkMistake.shouldCheck();
+                    selectTile(selectedTile);
+                } catch (NullPointerException e) {
+                    System.out.println("No tile has been selected.");
+                }
+            });
+        }
+
+        displayGrid();
+    }
+
+    // Displays the grid.
+    public void displayGrid() {
+        for (Tile tile : tiles) {
+            gridPane.add(tile, tile.getRow(), tile.getColumn());
         }
     }
 
@@ -133,127 +205,5 @@ public class Grid {
             cage.removeCage();
         }
         this.cages = new ArrayList<>();
-    }
-
-    // Displays the cages from a file.
-    public void readFile(File selectedFile) throws IOException {
-        if (selectedFile != null) {
-            removeCages();
-            ArrayList<String> splitFile = new ArrayList<>();
-
-            Scanner reader = new Scanner(selectedFile);
-            while (reader.hasNextLine()) {
-                splitFile.add(reader.nextLine());
-            }
-
-            checkCages(splitFile);
-        }
-    }
-
-    // Displays the cages from text.
-    public void readText(String gameText) {
-        if (!gameText.isEmpty()) {
-            removeCages();
-            String[] splitText = gameText.split("\\n");
-
-            checkCages(new ArrayList<>(Arrays.asList(splitText)));
-        }
-    }
-
-    // Checks if it can read a grid.
-    public void checkCages(ArrayList<String> splitCages) {
-        ArrayList<Tile> allTiles = new ArrayList<>();
-        ArrayList<Cage> validCages = new ArrayList<>();
-        boolean valid = true;
-
-        for (String textCage : splitCages) {
-            try {
-                // Gets the result and operation.
-                int cageSplit = textCage.indexOf(" ");
-                int result = Integer.parseInt(textCage.substring(0, cageSplit - 1));
-                String operation = textCage.substring(cageSplit - 1, cageSplit);
-
-                // Gets the tile.
-                ArrayList<Tile> cageTiles = new ArrayList<>();
-                for (String tilePosition : textCage.substring(cageSplit + 1).split(",")) {
-                    cageTiles.add(new Tile(Integer.parseInt(tilePosition)));
-                }
-
-                // Check if already taken.
-                for (Tile tile : cageTiles) {
-                    if (allTiles.contains(tile)) {
-                        throw new Exception("This cage overlaps another cage.");
-                    }
-                }
-
-                // Check if valid symbol.
-                if (!operation.equals("+") && !operation.equals("-") && !operation.equals("÷") && !operation.equals("x")) {
-                    throw new Exception("This cage doesn't contain a valid symbol.");
-                }
-
-                // Check if valid result / single tile.
-                if (cageTiles.size() == 1 && (result > 6 || result < 1)) {
-                    throw new Exception("This cage cannot achieve its result.");
-                }
-
-                // Check if tiles are all adjacent.
-                if (cageTiles.size() != 1) {
-                    for (Tile tile : cageTiles) {
-                        // Finds all possible adjacent positions.
-                        ArrayList<Integer> adjacentPositions = new ArrayList<>();
-                        adjacentPositions.add(tile.getGridPosition() - 1);
-                        adjacentPositions.add(tile.getGridPosition() + 1);
-                        adjacentPositions.add(tile.getGridPosition() + getSize());
-                        adjacentPositions.add(tile.getGridPosition() - getSize());
-
-                        boolean adjacentTiles = false;
-                        for (Tile otherTile : cageTiles) {
-                            if (adjacentPositions.contains(otherTile.getGridPosition())) {
-                                adjacentTiles = true;
-                                break;
-                            }
-                        }
-                        if (!adjacentTiles) {
-                            throw new Exception("The tiles in the cage are not adjacent.");
-                        }
-                    }
-                }
-
-                allTiles.addAll(cageTiles);
-                validCages.add(new Cage(this, result, operation, cageTiles));
-            } catch (Exception e) {
-                // COULD BE AN ALERT
-                System.out.println("Error: " + textCage + " is not a valid cage. Reason: " + e.getMessage());
-                valid = false;
-            }
-        }
-
-        // Check if all tiles taken.
-        for (int i = 1; i <= Math.pow(getSize(), 2); i++) {
-            boolean found = false;
-            for (Tile tile : allTiles) {
-                if (tile.getGridPosition() == i) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                System.out.println("Error: the tile at " + i + " is not in a cage.");
-                valid = false;
-            }
-        }
-
-        // Adds the cages to the grid.
-        if (valid) {
-            cages.addAll(validCages);
-
-            int maxPosition = 1;
-            for (Tile tile : allTiles) {
-                if (tile.getGridPosition() > maxPosition) {
-                    maxPosition = tile.getGridPosition();
-                }
-            }
-            displayGrid((int) Math.sqrt(maxPosition));
-        }
     }
 }
