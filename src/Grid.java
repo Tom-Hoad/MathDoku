@@ -60,46 +60,59 @@ public class Grid {
         this.cages = new ArrayList<>();
         this.tiles = new ArrayList<>();
 
-        for (String textCage : splitCages) {
-            // Gets the result and operation.
-            int cageSplit = textCage.indexOf(" ");
-            int result = Integer.parseInt(textCage.substring(0, cageSplit - 1));
-            String operation = textCage.substring(cageSplit - 1, cageSplit);
+        try {
+            for (String textCage : splitCages) {
+                // Gets the result and operation.
+                int cageSplit = textCage.indexOf(" ");
+                String strResult = textCage.substring(0, cageSplit - 1);
+                String operation = textCage.substring(cageSplit - 1, cageSplit);
+                String cageDefinition = textCage.substring(cageSplit + 1);
 
-            // Creates the cage.
-            ArrayList<Tile> cageTiles = new ArrayList<>();
-            for (String tilePosition : textCage.substring(cageSplit + 1).split(",")) {
-                Tile tile = new Tile(Integer.parseInt(tilePosition));
-                tile.setPrefSize(100, 100);
-                tile.setDefault();
+                // Checks if the cage has been entered correctly.
+                int result = Integer.parseInt(strResult);
+                checkOperation(operation);
 
-                // Event handler code for click a tile.
-                tile.setOnMouseClicked(mouseEvent -> {
-                    try {
-                        // Defaults the selected tile and selects the new tile.
-                        selectedTile.setDefault();
-                        selectTile(tile);
-                    } catch (NullPointerException e) {
-                        selectTile(tile);
-                    }
-                });
+                // Creates the cage.
+                ArrayList<Tile> cageTiles = new ArrayList<>();
+                for (String tilePosition : cageDefinition.split(",")) {
+                    Tile tile = new Tile(Integer.parseInt(tilePosition));
+                    tile.setPrefSize(100, 100);
+                    tile.setDefault();
+                    // Event handler code for click a tile.
+                    tile.setOnMouseClicked(mouseEvent -> {
+                        try {
+                            // Defaults the selected tile and selects the new tile.
+                            selectedTile.setDefault();
+                            selectTile(tile);
+                        } catch (NullPointerException e) {
+                            selectTile(tile);
+                        }
+                    });
 
-                tiles.add(tile);
-                cageTiles.add(tile);
+                    tiles.add(tile);
+                    cageTiles.add(tile);
+                }
+                cages.add(new Cage(this, result, operation, cageTiles));
+             }
+
+            // Determines the size of the array.
+            int maxPosition = 1;
+            for (Tile tile : tiles) {
+                if (tile.getGridPosition() > maxPosition) {
+                    maxPosition = tile.getGridPosition();
+                }
             }
-            cages.add(new Cage(this, result, operation, cageTiles));
-        }
+            this.size = (int) Math.sqrt(maxPosition);
 
-        // Determines the size of the array.
-        int maxPosition = 1;
-        for (Tile tile : tiles) {
-            if (tile.getGridPosition() > maxPosition) {
-                maxPosition = tile.getGridPosition();
+            if (size <= 8 && size >= 2) {
+                createGrid();
+            } else {
+                throw new Exception();
             }
+        } catch(Exception e) {
+            System.out.println("Error: invalid cage(s)!");
+            resetGrid();
         }
-        this.size = (int) Math.sqrt(maxPosition);
-
-        createGrid();
     }
 
     // Creates the grid on the pane.
@@ -141,14 +154,38 @@ public class Grid {
             });
         }
 
+        checkCages();
+    }
+
+    // Checks the cages for errors.
+    public void checkCages() {
         displayGrid();
     }
 
-    // Displays the grid.
+
+    // Displays the grid with cages.
     public void displayGrid() {
+        gridPane.getChildren().clear();
+        buttonHBox.getChildren().clear();
+
         for (Tile tile : tiles) {
-            gridPane.add(tile, tile.getRow(), tile.getColumn());
+            gridPane.add(tile, tile.getColumn(), tile.getRow());
         }
+        for (Cage cage : cages) {
+            cage.showCage();
+        }
+    }
+
+    // Resets the grid.
+    public void resetGrid() {
+        this.size = 0;
+        this.cages = new ArrayList<>();
+        this.rows = new ArrayList<>();
+        this.columns = new ArrayList<>();
+        this.tiles = new ArrayList<>();
+
+        gridPane.getChildren().clear();
+        buttonHBox.getChildren().clear();
     }
 
     // Selects a tile.
@@ -156,6 +193,13 @@ public class Grid {
         if (tile != null) {
             this.selectedTile = tile;
             tile.setSelected();
+        }
+    }
+
+    // Checks if the operation is correct.
+    public void checkOperation(String operation) throws Exception {
+        if (!operation.equals("+") && !operation.equals("*") && !operation.equals("x") && !operation.equals("-") && !operation.equals("/") && !operation.equals("÷")) {
+            throw new Exception();
         }
     }
 
@@ -197,13 +241,5 @@ public class Grid {
     // Gets the history class.
     public History getHistory() {
         return history;
-    }
-
-    // Removes all the cages.
-    public void removeCages() {
-        for (Cage cage : cages) {
-            cage.removeCage();
-        }
-        this.cages = new ArrayList<>();
     }
 }

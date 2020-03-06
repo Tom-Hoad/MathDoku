@@ -90,6 +90,7 @@ public class CheckMistake {
                     }
                     break;
                 // Multiply values.
+                case "*":
                 case "x":
                     givenResult = 1;
                     for (int tileValue : cageValues) {
@@ -112,6 +113,7 @@ public class CheckMistake {
                     }
                     break;
                 // Divide values.
+                case "/":
                 case "÷":
                     cageValues.sort(Collections.reverseOrder());
                     givenResult = cageValues.get(0) * cageValues.get(0);
