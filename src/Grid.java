@@ -105,13 +105,63 @@ public class Grid {
             this.size = (int) Math.sqrt(maxPosition);
 
             if (size <= 8 && size >= 2) {
+                //checkCages();
                 createGrid();
+                displayGrid();
             } else {
                 throw new Exception();
             }
         } catch(Exception e) {
             System.out.println("Error: invalid cage(s)!");
             resetGrid();
+        }
+    }
+
+    // Checks the cages for errors
+    public void checkCages() throws Exception {
+        // Check if overlapping cages.
+        int[] positionCount = new int[size * size];
+        for (Tile tile : tiles) {
+            int tilePosition = tile.getGridPosition();
+            if (positionCount[tilePosition] != 0) {
+                throw new Exception();
+            } else {
+                positionCount[tilePosition] = tilePosition;
+            }
+        }
+
+        // Check for missing values.
+        for (int position : positionCount) {
+            if (position == 0) {
+                throw new Exception();
+            }
+        }
+
+        // Check if single cages.
+        for (Cage cage : cages) {
+            if (cage.getCageTiles().size() == 1) {
+                if (cage.getResult() > 6) {
+                    throw new Exception();
+                }
+            }
+        }
+
+        // Check for disconnected cages.
+        for (Cage cage : cages) {
+            for (Tile tile : cage.getCageTiles()) {
+                int position = tile.getGridPosition();
+                for (Tile otherTile : cage.getCageTiles()) {
+                    ArrayList<Integer> adjacentPositions = new ArrayList<>();
+                    adjacentPositions.add(position + 1);
+                    adjacentPositions.add(position - 1);
+                    adjacentPositions.add(position + size);
+                    adjacentPositions.add(position - size);
+
+                    if (!adjacentPositions.contains(otherTile.getGridPosition())) {
+                        throw new Exception();
+                    }
+                }
+            }
         }
     }
 
@@ -135,6 +185,7 @@ public class Grid {
         }
 
         // Adds number buttons to below the grid.
+        buttonHBox.getChildren().clear();
         for (int i = 0; i < size; i++) {
             Button numButton = new Button(String.valueOf(i + 1));
             numButton.setFont(new Font(25));
@@ -153,21 +204,11 @@ public class Grid {
                 }
             });
         }
-
-        checkCages();
     }
-
-    // Checks the cages for errors.
-    public void checkCages() {
-        displayGrid();
-    }
-
 
     // Displays the grid with cages.
     public void displayGrid() {
         gridPane.getChildren().clear();
-        buttonHBox.getChildren().clear();
-
         for (Tile tile : tiles) {
             gridPane.add(tile, tile.getColumn(), tile.getRow());
         }

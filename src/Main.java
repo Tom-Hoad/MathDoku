@@ -26,6 +26,7 @@ public class Main extends Application {
         GridPane mainPane = new GridPane();
         mainPane.setPadding(new Insets(10, 10, 10, 10));
         mainPane.setAlignment(Pos.CENTER);
+        mainPane.setPrefSize(800, 800);
 
         // Creates the action bar at the top.
         HBox optionsHBox = new HBox(5);
@@ -51,6 +52,7 @@ public class Main extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(1);
         gridPane.setVgap(1);
+        gridPane.setAlignment(Pos.CENTER);
         Grid grid = new Grid(gridPane, buttonHBox, new History(undoButton, redoButton));
 
         // The lambda expression for undoing a change.
@@ -154,11 +156,13 @@ public class Main extends Application {
             }
         });
 
-        // Finishes setting up the GUI.
+        // Adds all the elements to the main pane.
         mainPane.add(title, 0, 0);
         mainPane.add(optionsHBox, 0, 1);
         mainPane.add(gridPane, 0, 2);
         mainPane.add(buttonHBox, 0, 3);
+
+        // Finishes setting up the GUI.
         Scene scene = new Scene(mainPane);
         stage.setScene(scene);
         stage.setResizable(true);
