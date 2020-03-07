@@ -42,16 +42,6 @@ public class Cage {
         }
     }
 
-    // Removes the cage from the grid.
-    public void removeCage() {
-        Tile firstTile = cageTiles.get(0);
-        firstTile.getChildren().remove(1);
-
-        for (Tile cageTile : cageTiles) {
-            cageTile.addBorder(null);
-        }
-    }
-
     // Checks if there is an adjacent tile.
     public String findAdjacent(boolean found, int positionAdjacent) {
         for (Tile adjacentTile : cageTiles) {

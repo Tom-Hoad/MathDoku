@@ -8,6 +8,7 @@ public class Tile extends StackPane implements Comparable<Tile> {
     private int value;
     private int row;
     private int column;
+    private int fontSize;
     private String style;
     private String border;
 
@@ -17,6 +18,7 @@ public class Tile extends StackPane implements Comparable<Tile> {
         this.value = 0;
         this.getChildren().add(0, new Label(""));
         this.style = "-fx-border-color: black; ";
+        this.fontSize = 50;
     }
 
     // Defaults the tile.
@@ -74,7 +76,7 @@ public class Tile extends StackPane implements Comparable<Tile> {
             label.setText("");
         }
 
-        label.setFont(new Font(50));
+        label.setFont(new Font(fontSize));
         getChildren().add(0, label);
     }
 
@@ -96,6 +98,23 @@ public class Tile extends StackPane implements Comparable<Tile> {
     // Sets the column the tiles on.
     public void setColumn(int column) {
         this.column = column;
+    }
+
+    // Sets the font size.
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
+
+        getChildren().remove(0);
+        Label label = new Label();
+
+        if (value != 0) {
+            label.setText(String.valueOf(value));
+        } else {
+            label.setText("");
+        }
+
+        label.setFont(new Font(fontSize));
+        getChildren().add(0, label);
     }
 
     // Compares the value of two tiles.

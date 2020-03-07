@@ -12,6 +12,7 @@ import java.util.Scanner;
 // The class for a grid.
 public class Grid {
     private int size;
+    private String font;
     private GridPane gridPane;
     private HBox buttonHBox;
     private ArrayList<Row> rows;
@@ -24,6 +25,8 @@ public class Grid {
 
     // The grid class constructor.
     public Grid(GridPane gridPane, HBox buttonHBox, History history) {
+        this.font = "Medium";
+
         this.gridPane = gridPane;
         this.buttonHBox = buttonHBox;
 
@@ -292,5 +295,23 @@ public class Grid {
     // Gets the history class.
     public History getHistory() {
         return history;
+    }
+
+    // Sets the font.
+    public void setFont(String font) {
+        this.font = font;
+
+        try {
+            // Sets the font size for all tile.
+            for (Tile tile : tiles) {
+                if (font.equals("Small")) {
+                    tile.setFontSize(40);
+                } else if (font.equals("Medium")) {
+                    tile.setFontSize(50);
+                } else {
+                    tile.setFontSize(60);
+                }
+            }
+        } catch (NullPointerException ignored) {}
     }
 }
