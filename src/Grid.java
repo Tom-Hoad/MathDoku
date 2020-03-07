@@ -199,7 +199,7 @@ public class Grid {
             tile.setColumn((tile.getGridPosition() - 1) % size);
 
             rows.get(tile.getRow()).addTo(tile);
-            columns.get(tile.getRow()).addTo(tile);
+            columns.get(tile.getColumn()).addTo(tile);
         }
 
         // Adds number buttons to below the grid.
@@ -226,7 +226,9 @@ public class Grid {
 
     // Displays the grid with cages.
     public void displayGrid() {
+        history.clearHistory();
         gridPane.getChildren().clear();
+
         for (Tile tile : tiles) {
             gridPane.add(tile, tile.getColumn(), tile.getRow());
         }
@@ -243,6 +245,7 @@ public class Grid {
         this.columns = new ArrayList<>();
         this.tiles = new ArrayList<>();
 
+        history.clearHistory();
         gridPane.getChildren().clear();
         buttonHBox.getChildren().clear();
     }

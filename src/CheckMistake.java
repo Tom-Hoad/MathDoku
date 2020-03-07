@@ -23,17 +23,9 @@ public class CheckMistake {
     // Checks if it should check the grid.
     public void shouldCheck() {
         if (isChecked) {
-            // Tells the user if they have won or not.
-            if (checkGrid()) {
-                Alert winAlert = new Alert(Alert.AlertType.INFORMATION);
-                winAlert.setTitle("Congratulations!");
-                winAlert.setHeaderText("Congratulations!");
-                winAlert.setContentText("You've won this game of MathDoku!");
-
-                winAlert.show();
-                correctTiles();
-            }
+            checkGrid(true);
         } else {
+            checkGrid(true);
             correctTiles();
         }
     }
@@ -46,9 +38,7 @@ public class CheckMistake {
     }
 
     // Checks the grid for mistakes.
-    public boolean checkGrid() {
-        boolean correct = true;
-
+    public void checkGrid(boolean correct) {
         // Checks cages if correct.
         for (Cage cage : grid.getCages()) {
             boolean zeroError = false;
@@ -182,6 +172,15 @@ public class CheckMistake {
                 correct = false;
             }
         }
-        return correct;
+
+        // Tells the user if they have won or not.
+        if (correct) {
+            Alert winAlert = new Alert(Alert.AlertType.INFORMATION);
+            winAlert.setTitle("Congratulations!");
+            winAlert.setHeaderText("Congratulations!");
+            winAlert.setContentText("You've won this game of MathDoku!");
+
+            winAlert.show();
+        }
     }
 }
