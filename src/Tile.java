@@ -100,21 +100,9 @@ public class Tile extends StackPane implements Comparable<Tile> {
         this.column = column;
     }
 
-    // Sets the font size.
+    // Sets the font size for the tile.
     public void setFontSize(int fontSize) {
         this.fontSize = fontSize;
-
-        getChildren().remove(0);
-        Label label = new Label();
-
-        if (value != 0) {
-            label.setText(String.valueOf(value));
-        } else {
-            label.setText("");
-        }
-
-        label.setFont(new Font(fontSize));
-        getChildren().add(0, label);
     }
 
     // Compares the value of two tiles.

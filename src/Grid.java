@@ -12,7 +12,8 @@ import java.util.Scanner;
 // The class for a grid.
 public class Grid {
     private int size;
-    private String font;
+    private int tileFontSize;
+    private int cageFontSize;
     private GridPane gridPane;
     private HBox buttonHBox;
     private ArrayList<Row> rows;
@@ -25,14 +26,14 @@ public class Grid {
 
     // The grid class constructor.
     public Grid(GridPane gridPane, HBox buttonHBox, History history) {
-        this.font = "Medium";
-
         this.gridPane = gridPane;
         this.buttonHBox = buttonHBox;
 
         this.selectedTile = null;
         this.checkMistake = new CheckMistake(this);
         this.history = history;
+
+        setFont("");
     }
 
     // Displays the cages from a file.
@@ -81,6 +82,8 @@ public class Grid {
                     Tile tile = new Tile(Integer.parseInt(tilePosition));
                     tile.setPrefSize(100, 100);
                     tile.setDefault();
+                    tile.setFontSize(tileFontSize);
+
                     // Event handler code for click a tile.
                     tile.setOnMouseClicked(mouseEvent -> {
                         try {
@@ -95,7 +98,9 @@ public class Grid {
                     tiles.add(tile);
                     cageTiles.add(tile);
                 }
-                cages.add(new Cage(this, result, operation, cageTiles));
+                Cage cage = new Cage(this, result, operation, cageTiles);
+                cage.setFontSize(cageFontSize);
+                cages.add(cage);
              }
 
             // Determines the size of the array.
@@ -299,18 +304,33 @@ public class Grid {
 
     // Sets the font.
     public void setFont(String font) {
-        this.font = font;
+        // Sets the font size for a tile.
+        if (font.equals("Small")) {
+            this.tileFontSize = 40;
+        } else if (font.equals("Large")) {
+            this.tileFontSize = 60;
+        } else {
+            this.tileFontSize = 50;
+        }
+
+        // Sets the font size for a cage.
+        if (font.equals("Small")) {
+            this.cageFontSize = 14;
+        } else if (font.equals("Large")) {
+            this.cageFontSize = 22;
+        } else {
+            this.cageFontSize = 18;
+        }
 
         try {
-            // Sets the font size for all tile.
-            for (Tile tile : tiles) {
-                if (font.equals("Small")) {
-                    tile.setFontSize(40);
-                } else if (font.equals("Medium")) {
-                    tile.setFontSize(50);
-                } else {
-                    tile.setFontSize(60);
+            // Sets the font size for all cages and tiles.
+            for (Cage cage : cages) {
+                for (Tile tile : cage.getCageTiles()) {
+                    tile.setFontSize(tileFontSize);
+                    tile.displayNumber(tile.getValue());
                 }
+                cage.setFontSize(cageFontSize);
+                cage.showCage();
             }
         } catch (NullPointerException ignored) {}
     }

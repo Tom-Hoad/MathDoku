@@ -135,9 +135,7 @@ public class Main extends Application {
         });
 
         // The lambda expression for changing the font.
-        fontChoice.getSelectionModel().selectedItemProperty().addListener((font, oldFont, newFont) -> {
-            grid.setFont(newFont);
-        });
+        fontChoice.getSelectionModel().selectedItemProperty().addListener((font, oldFont, newFont) -> grid.setFont(newFont));
 
         // Event handler code for pressing a key.
         mainPane.setOnKeyPressed(keyEvent -> {

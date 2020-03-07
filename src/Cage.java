@@ -8,6 +8,7 @@ import java.util.ArrayList;
 // The class for a cage on the grid.
 public class Cage {
     private Grid grid;
+    private int fontSize;
     private int result;
     private String operation;
     private ArrayList<Tile> cageTiles;
@@ -15,6 +16,7 @@ public class Cage {
     // The cage class constructor.
     public Cage(Grid grid, int result, String operation, ArrayList<Tile> cageTiles) {
         this.grid = grid;
+        this.fontSize = 18;
         this.result = result;
         this.operation = operation;
         this.cageTiles = cageTiles;
@@ -22,14 +24,8 @@ public class Cage {
 
     // Shows the cage on the grid.
     public void showCage() {
-        // Gets the top left most tile.
-        Tile firstTile = cageTiles.get(0);
-
-        // Displays the cage requirement.
-        Label label = new Label(result + "," + operation);
-        label.setFont(new Font(18));
-        firstTile.getChildren().add(1, label);
-        StackPane.setAlignment(firstTile.getChildren().get(1), Pos.TOP_LEFT);
+        // Displays the cage requirments.
+        displayLabel();
 
         // Adds borders to the sides of tiles not adjacent to the cage.
         for (Tile cageTile : cageTiles) {
@@ -40,6 +36,22 @@ public class Cage {
                     findAdjacent(false, cageTile.getGridPosition() - 1);
             cageTile.addBorder(tileStyle);
         }
+    }
+
+    // Displays the cage requirements.
+    public void displayLabel() {
+        // Gets the top left most tile.
+        Tile firstTile = cageTiles.get(0);
+
+        try {
+            firstTile.getChildren().remove(1);
+        } catch (Exception ignored) {}
+
+        // Displays the cage requirement.
+        Label label = new Label(result + "," + operation);
+        label.setFont(new Font(fontSize));
+        firstTile.getChildren().add(1, label);
+        StackPane.setAlignment(firstTile.getChildren().get(1), Pos.TOP_LEFT);
     }
 
     // Checks if there is an adjacent tile.
@@ -70,5 +82,10 @@ public class Cage {
     // Gets the array of tiles in the cage.
     public ArrayList<Tile> getCageTiles() {
         return cageTiles;
+    }
+
+    // Sets the font size of the cage label.
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
     }
 }
