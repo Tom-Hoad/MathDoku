@@ -1,3 +1,4 @@
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -120,7 +121,11 @@ public class Grid {
                 throw new Exception();
             }
         } catch(Exception e) {
-            System.out.println("Error: invalid cage(s)!");
+            Alert invalidAlert = new Alert(Alert.AlertType.ERROR);
+            invalidAlert.setTitle("Error");
+            invalidAlert.setHeaderText("Invalid Cage(s)");
+            invalidAlert.setContentText("The game has been entered incorrectly so the grid has reset.");
+            invalidAlert.show();
             resetGrid();
         }
     }
