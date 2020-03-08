@@ -175,12 +175,14 @@ public class CheckMistake {
 
         // Tells the user if they have won or not.
         if (correct) {
+            // Displays a win alert.
             Alert winAlert = new Alert(Alert.AlertType.INFORMATION);
             winAlert.setTitle("Congratulations!");
             winAlert.setHeaderText("Congratulations!");
             winAlert.setContentText("You've won this game of MathDoku!");
-
             winAlert.show();
+
+            // Displays the win animation, providing colours.
             String[] colours = {"white", "orchid", "palevioletred", "lightseagreen", "yellowgreen", "khaki", "coral", "indianred"};
             grid.winAnimation(colours.length, colours);
         }

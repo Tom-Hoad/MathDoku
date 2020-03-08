@@ -18,3 +18,4 @@ Loading Files
 
 Extensions attempted:
 Font Sizes
+Winning Animation

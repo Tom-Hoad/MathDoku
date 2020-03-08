@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.Scanner;
 
 // The class for a grid.
@@ -351,13 +350,17 @@ public class Grid {
     // Displays the winning animation.
     public void winAnimation(int count, String[] colours) {
         if (count != 0) {
+            // Waits every second to change the background.
             PauseTransition wait = new PauseTransition(Duration.seconds(0.5));
             wait.setOnFinished(event -> {
+
+                // Changes the background recursively.
                 mainPane.setStyle("-fx-background-color: " + colours[count - 1] + ";");
                 winAnimation(count - 1, colours);
             });
             wait.play();
         } else {
+            // Returns the background to default.
             mainPane.setStyle(null);
         }
     }
