@@ -174,13 +174,14 @@ public class CheckMistake {
         }
 
         // Tells the user if they have won or not.
-        if (correct) {
+        if (correct || true) {
             Alert winAlert = new Alert(Alert.AlertType.INFORMATION);
             winAlert.setTitle("Congratulations!");
             winAlert.setHeaderText("Congratulations!");
             winAlert.setContentText("You've won this game of MathDoku!");
 
             winAlert.show();
+            grid.winAnimation();
         }
     }
 }

@@ -16,6 +16,7 @@ public class Grid {
     private int tileFontSize;
     private int cageFontSize;
     private GridPane gridPane;
+    private GridPane mainPane;
     private HBox buttonHBox;
     private ArrayList<Row> rows;
     private ArrayList<Column> columns;
@@ -26,8 +27,9 @@ public class Grid {
     private History history;
 
     // The grid class constructor.
-    public Grid(GridPane gridPane, HBox buttonHBox, History history) {
+    public Grid(GridPane gridPane, GridPane mainPane, HBox buttonHBox, History history) {
         this.gridPane = gridPane;
+        this.mainPane = mainPane;
         this.buttonHBox = buttonHBox;
 
         this.selectedTile = null;
@@ -341,5 +343,10 @@ public class Grid {
                 cage.showCage();
             }
         } catch (NullPointerException ignored) {}
+    }
+
+    // Displays the winning animation.
+    public void winAnimation() {
+        mainPane.setStyle("-fx-background-color: lightgreen;");
     }
 }

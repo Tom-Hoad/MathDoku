@@ -59,7 +59,7 @@ public class Main extends Application {
         gridPane.setHgap(1);
         gridPane.setVgap(1);
         gridPane.setAlignment(Pos.CENTER);
-        Grid grid = new Grid(gridPane, buttonHBox, new History(undoButton, redoButton));
+        Grid grid = new Grid(gridPane, mainPane, buttonHBox, new History(undoButton, redoButton));
 
         // The lambda expression for undoing a change.
         undoButton.setOnMouseClicked(mouseEvent -> grid.getHistory().undo());
