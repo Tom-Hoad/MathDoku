@@ -52,6 +52,7 @@ public class Main extends Application {
         CheckBox mistakesCheck = new CheckBox();
         ChoiceBox<String> fontChoice = new ChoiceBox<>();
         fontChoice.getItems().addAll("Small", "Medium", "Large");
+        fontChoice.setValue("Medium");
         optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck, fontChoice);
 
         // Creates a class for the grid and history.
@@ -176,7 +177,6 @@ public class Main extends Application {
         // Finishes setting up the GUI.
         Scene scene = new Scene(mainPane);
         stage.setScene(scene);
-        stage.setResizable(true);
         stage.show();
     }
 

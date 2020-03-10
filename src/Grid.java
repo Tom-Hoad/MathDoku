@@ -164,29 +164,31 @@ public class Grid {
 
         // Check for disconnected cages.
         for (Cage cage : cages) {
-            int[] cagePositions = new int[cage.getCageTiles().size()];
+            if (cage.getCageTiles().size() > 1) {
+                int[] cagePositions = new int[cage.getCageTiles().size()];
 
-            // Creates an array of all cage tiles.
-            for (int i = 0; i < cagePositions.length; i++) {
-                cagePositions[i] = cage.getCageTiles().get(i).getGridPosition();
-            }
+                // Creates an array of all cage tiles.
+                for (int i = 0; i < cagePositions.length; i++) {
+                    cagePositions[i] = cage.getCageTiles().get(i).getGridPosition();
+                }
 
-            // Checks if any of the cage positions appear in an adjacent position.
-            for (Tile tile : cage.getCageTiles()) {
-                boolean found = false;
-                int position = tile.getGridPosition();
-                int[] adjacentPositions = {position + 1, position - 1, position + size, position - size};
+                // Checks if any of the cage positions appear in an adjacent position.
+                for (Tile tile : cage.getCageTiles()) {
+                    boolean found = false;
+                    int position = tile.getGridPosition();
+                    int[] adjacentPositions = {position + 1, position - 1, position + size, position - size};
 
-                for (int cagePosition : cagePositions) {
-                    for (int adjacentPosition : adjacentPositions) {
-                        if (cagePosition == adjacentPosition) {
-                            found = true;
-                            break;
+                    for (int cagePosition : cagePositions) {
+                        for (int adjacentPosition : adjacentPositions) {
+                            if (cagePosition == adjacentPosition) {
+                                found = true;
+                                break;
+                            }
                         }
                     }
-                }
-                if (!found) {
-                    throw new Exception();
+                    if (!found) {
+                        throw new Exception();
+                    }
                 }
             }
         }
