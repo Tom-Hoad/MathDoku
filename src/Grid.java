@@ -213,19 +213,32 @@ public class Grid {
 
         // Adds number buttons to below the grid.
         buttonHBox.getChildren().clear();
-        for (int i = 0; i < size; i++) {
-            Button numButton = new Button(String.valueOf(i + 1));
+        for (int i = 0; i < size + 1; i++) {
+            // Creates the button.
+            Button numButton = new Button();
             numButton.setFont(new Font(25));
             buttonHBox.getChildren().add(numButton);
+
+            // Sets up properties based on if number or remove.
+            int value;
+            if (i != size) {
+                numButton.setText(String.valueOf(i + 1));
+                value = i + 1;
+            } else {
+                numButton.setText("Remove");
+                value = 0;
+            }
 
             // The event handler code for pressing a number button.
             numButton.setOnMouseClicked(mouseEvent -> {
                 // Displays the number on the tile.
                 try {
-                    history.addMove(new Change(selectedTile, Integer.parseInt(numButton.getText())));
-                    selectedTile.displayNumber(Integer.parseInt(numButton.getText()));
-                    checkMistake.shouldCheck();
-                    selectTile(selectedTile);
+                    if (value != 0 || selectedTile.getValue() != 0) {
+                        history.addMove(new Change(selectedTile, value));
+                        selectedTile.displayNumber(value);
+                        checkMistake.shouldCheck();
+                        selectTile(selectedTile);
+                    }
                 } catch (NullPointerException e) {
                     System.out.println("No tile has been selected.");
                 }

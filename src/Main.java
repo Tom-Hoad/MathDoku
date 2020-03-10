@@ -155,8 +155,10 @@ public class Main extends Application {
                     }
                 } else {
                     // Removes the value.
-                    grid.getHistory().addMove(new Change(grid.getSelected(), 0));
-                    grid.getSelected().displayNumber(0);
+                    if (grid.getSelected().getValue() != 0) {
+                        grid.getHistory().addMove(new Change(grid.getSelected(), 0));
+                        grid.getSelected().displayNumber(0);
+                    }
                 }
                 grid.getCheckMistake().shouldCheck();
                 grid.selectTile(grid.getSelected());
