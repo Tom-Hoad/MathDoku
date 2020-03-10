@@ -29,8 +29,8 @@ public class Main extends Application {
         // Creates the main pane.
         GridPane mainPane = new GridPane();
         mainPane.setPadding(new Insets(10, 10, 10, 10));
-        mainPane.setAlignment(Pos.CENTER);
         mainPane.setPrefSize(800, 800);
+        mainPane.setAlignment(Pos.CENTER);
 
         // Creates the action bar at the top.
         HBox optionsHBox = new HBox(5);
@@ -59,6 +59,8 @@ public class Main extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(1);
         gridPane.setVgap(1);
+        //gridPane.prefWidthProperty().bind(mainPane.widthProperty());
+        //gridPane.prefHeightProperty().bind(mainPane.heightProperty());
         gridPane.setAlignment(Pos.CENTER);
         Grid grid = new Grid(gridPane, mainPane, buttonHBox, new History(undoButton, redoButton));
 
