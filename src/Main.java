@@ -59,8 +59,6 @@ public class Main extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setHgap(1);
         gridPane.setVgap(1);
-        //gridPane.prefWidthProperty().bind(mainPane.widthProperty());
-        //gridPane.prefHeightProperty().bind(mainPane.heightProperty());
         gridPane.setAlignment(Pos.CENTER);
         Grid grid = new Grid(gridPane, mainPane, buttonHBox, new History(undoButton, redoButton));
 
@@ -152,8 +150,8 @@ public class Main extends Application {
                 if (key != KeyCode.BACK_SPACE) {
                     for (int i = 0; i <= grid.getSize() - 1; i++) {
                         if (key == codes[i]) {
-                            grid.getHistory().addMove(new Change(grid.getSelected(), key.getCode() - 48));
-                            grid.getSelected().displayNumber(key.getCode() - 48);
+                            grid.getHistory().addMove(new Change(grid.getSelected(), Integer.parseInt(key.getName())));
+                            grid.getSelected().displayNumber(Integer.parseInt(key.getName()));
                         }
                     }
                 } else {
