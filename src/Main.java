@@ -61,10 +61,10 @@ public class Main extends Application {
         // Creates a class for the grid and history.
         Grid grid = new Grid(mainPane, buttonHBox, new History(undoButton, redoButton));
 
-        // The lambda expression for undoing a change.
+        // The lambda expression code for undoing a change.
         undoButton.setOnMouseClicked(mouseEvent -> grid.getHistory().undo());
 
-        // The lambda expression for redoing a change.
+        // The lambda expression code for redoing a change.
         redoButton.setOnMouseClicked(mouseEvent -> grid.getHistory().redo());
 
         // The event handler code for clearing the grid.
@@ -134,8 +134,13 @@ public class Main extends Application {
             grid.selectTile(grid.getSelected());
         });
 
-        // The lambda expression for changing the font.
+        // The lambda expression code for changing the font.
         fontChoice.getSelectionModel().selectedItemProperty().addListener((font, oldFont, newFont) -> grid.setFont(newFont));
+
+        // The event handler code for solving the grid.
+        solveGrid.setOnAction(actionEvent -> {
+            grid.solve();
+        });
 
         // Event handler code for pressing a key.
         mainPane.setOnKeyPressed(keyEvent -> {

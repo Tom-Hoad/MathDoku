@@ -40,8 +40,7 @@ public class Grid extends GridPane {
         this.selectedTile = null;
         this.checkMistake = new CheckMistake(this);
         this.history = history;
-        this.solver = new Solver(size, cages);
-        System.out.println(Arrays.deepToString(solver.getTestGrid()));
+        this.solver = new Solver();
 
         setFont("");
     }
@@ -264,6 +263,7 @@ public class Grid extends GridPane {
         for (Cage cage : cages) {
             cage.showCage();
         }
+        solver.setGrid(size, cages);
     }
 
     // Resets the grid.
@@ -382,6 +382,13 @@ public class Grid extends GridPane {
         } else {
             // Returns the background to default.
             mainPane.setStyle(null);
+        }
+    }
+
+    // Calls for the grid to be solved.
+    public void solve() {
+        if (size > 0) {
+            System.out.println(Arrays.deepToString(solver.solve()));
         }
     }
 }

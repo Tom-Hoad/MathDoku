@@ -4,7 +4,16 @@ public class Solver {
     private int[][] testGrid;
     private ArrayList<Cage> cages;
 
-    public Solver(int size, ArrayList<Cage> cages) {
+    // Responds for a call to solve the grid.
+    public int[][] solve() {
+        fillSingles();
+
+        // Returns the solved grid.
+        return testGrid;
+    }
+
+    // Gets the cages and size of the grid.
+    public void setGrid(int size, ArrayList<Cage> cages) {
         testGrid = new int[size][size];
         this.cages = cages;
     }
@@ -14,13 +23,9 @@ public class Solver {
         for (Cage cage : cages) {
             if (cage.getCageTiles().size() == 1) {
                 Tile singleTile = cage.getCageTiles().get(0);
-                testGrid[singleTile.getRow() - 1][singleTile.getColumn() - 1] = cage.getResult();
+                testGrid[singleTile.getRow()][singleTile.getColumn()] = cage.getResult();
             }
         }
     }
 
-    // Returns the solved grid.
-    public int[][] getTestGrid() {
-        return testGrid;
-    }
 }
