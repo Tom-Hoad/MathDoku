@@ -1,4 +1,5 @@
 import javafx.animation.PauseTransition;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -13,11 +14,10 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 // The class for a grid.
-public class Grid {
+public class Grid extends GridPane {
     private int size;
     private int tileFontSize;
     private int cageFontSize;
-    private GridPane gridPane;
     private GridPane mainPane;
     private HBox buttonHBox;
     private ArrayList<Row> rows;
@@ -29,11 +29,13 @@ public class Grid {
     private History history;
 
     // The grid class constructor.
-    public Grid(GridPane gridPane, GridPane mainPane, HBox buttonHBox, History history) {
-        this.gridPane = gridPane;
+    public Grid(GridPane mainPane, HBox buttonHBox, History history) {
+        this.setHgap(1);
+        this.setVgap(1);
+        this.setAlignment(Pos.CENTER);
+
         this.mainPane = mainPane;
         this.buttonHBox = buttonHBox;
-
         this.selectedTile = null;
         this.checkMistake = new CheckMistake(this);
         this.history = history;
@@ -251,10 +253,10 @@ public class Grid {
     // Displays the grid with cages.
     public void displayGrid() {
         history.clearHistory();
-        gridPane.getChildren().clear();
+        getChildren().clear();
 
         for (Tile tile : tiles) {
-            gridPane.add(tile, tile.getColumn(), tile.getRow());
+            add(tile, tile.getColumn(), tile.getRow());
         }
         for (Cage cage : cages) {
             cage.showCage();
@@ -270,7 +272,7 @@ public class Grid {
         this.tiles = new ArrayList<>();
 
         history.clearHistory();
-        gridPane.getChildren().clear();
+        getChildren().clear();
         buttonHBox.getChildren().clear();
     }
 

@@ -56,11 +56,7 @@ public class Main extends Application {
         optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck, fontChoice);
 
         // Creates a class for the grid and history.
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(1);
-        gridPane.setVgap(1);
-        gridPane.setAlignment(Pos.CENTER);
-        Grid grid = new Grid(gridPane, mainPane, buttonHBox, new History(undoButton, redoButton));
+        Grid grid = new Grid(mainPane, buttonHBox, new History(undoButton, redoButton));
 
         // The lambda expression for undoing a change.
         undoButton.setOnMouseClicked(mouseEvent -> grid.getHistory().undo());
@@ -171,7 +167,7 @@ public class Main extends Application {
         // Adds all the elements to the main pane.
         mainPane.add(title, 0, 0);
         mainPane.add(optionsHBox, 0, 1);
-        mainPane.add(gridPane, 0, 2);
+        mainPane.add(grid, 0, 2);
         mainPane.add(buttonHBox, 0, 3);
 
         // Finishes setting up the GUI.
