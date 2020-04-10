@@ -22,6 +22,9 @@ Sections completed:
 5) Clearing, Undo, Redo
 6) Loading Files
 
-Extensions attempted:
+Extensions completed:
 7) Font Sizes
 8) Winning Animation
+
+Extensions attempted:
+9) MathDoku Solver

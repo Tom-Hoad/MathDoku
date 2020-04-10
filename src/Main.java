@@ -42,7 +42,7 @@ public class Main extends Application {
         buttonHBox.setPadding(new Insets(10, 5, 5, 5));
         buttonHBox.setAlignment(Pos.CENTER);
 
-        // Adds functionality elements to the action bar.
+        // Adds functionality essential elements to the action bar.
         Button undoButton = new Button("Undo");
         Button redoButton = new Button("Redo");
         Button clearButton = new Button("Clear Grid");
@@ -50,10 +50,13 @@ public class Main extends Application {
         Button loadTextButton = new Button("Load from Text");
         Label mistakesLabel = new Label("Click to check the grid:");
         CheckBox mistakesCheck = new CheckBox();
+
+        // Adds functionality optional elements to the action bar.
         ChoiceBox<String> fontChoice = new ChoiceBox<>();
         fontChoice.getItems().addAll("Small", "Medium", "Large");
         fontChoice.setValue("Medium");
-        optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck, fontChoice);
+        Button solveGrid = new Button("Solve");
+        optionsHBox.getChildren().addAll(undoButton, redoButton, clearButton, loadFileButton, loadTextButton, mistakesLabel, mistakesCheck, fontChoice, solveGrid);
 
         // Creates a class for the grid and history.
         Grid grid = new Grid(mainPane, buttonHBox, new History(undoButton, redoButton));

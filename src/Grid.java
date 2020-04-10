@@ -27,6 +27,7 @@ public class Grid extends GridPane {
     private Tile selectedTile;
     private CheckMistake checkMistake;
     private History history;
+    private Solver solver;
 
     // The grid class constructor.
     public Grid(GridPane mainPane, HBox buttonHBox, History history) {
@@ -39,6 +40,8 @@ public class Grid extends GridPane {
         this.selectedTile = null;
         this.checkMistake = new CheckMistake(this);
         this.history = history;
+        this.solver = new Solver(size, cages);
+        System.out.println(Arrays.deepToString(solver.getTestGrid()));
 
         setFont("");
     }
