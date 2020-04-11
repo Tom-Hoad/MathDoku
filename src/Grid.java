@@ -388,15 +388,15 @@ public class Grid extends GridPane {
     // Calls for the grid to be solved.
     public void solve() {
         if (size > 0) {
-            int[][] solvedGrid = solver.solve();
+            SolverTile[][] solvedGrid = solver.solve();
 
             // Displays the result of a solve.
             int rowCount = 0;
-            for (int[] row : solvedGrid) {
+            for (SolverTile[] row : solvedGrid) {
                 int columnCount = 0;
-                for (int columnValue : row) {
-                    if (columnValue != 0) {
-                        getTiles().get((rowCount * size) + columnCount).displayNumber(columnValue);
+                for (SolverTile columnTile : row) {
+                    if (columnTile.getFinalValue() != 0) {
+                        getTiles().get((rowCount * size) + columnCount).displayNumber(columnTile.getFinalValue());
                     }
                     columnCount++;
                 }
