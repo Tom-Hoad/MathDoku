@@ -403,5 +403,6 @@ public class Grid extends GridPane {
                 rowCount++;
             }
         }
+        checkMistake.shouldCheck();
     }
 }

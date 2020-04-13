@@ -75,16 +75,20 @@ public class Solver {
     }
 
     // Checks for a tile that has only one possible value.
-    public void findFinals() {
+    public boolean findFinals() {
+        boolean update = false;
+
         // Gets every tile in the grid.
         for (SolverTile[] row : testGrid) {
             for (SolverTile tile : row) {
                 // Checks if tile can be made final.
                 if (tile.numberPossibles() == 1) {
                     tile.setFinalValue();
+                    update = true;
                 }
             }
         }
+        return update;
     }
 
     // Responds for a call to solve the grid.
@@ -97,10 +101,11 @@ public class Solver {
             }
         }
 
-        // Checks rows and columns once initially.
-        checkRows();
-        checkColumns();
-        findFinals();
+        // Eliminates possibilities until it cannot.
+        do {
+            checkRows();
+            checkColumns();
+        } while (findFinals());
 
         // Returns the solved grid.
         return testGrid;
