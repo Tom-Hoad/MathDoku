@@ -14,7 +14,7 @@ public class Solver {
         // Populates the test grid.
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                testGrid[i][j] = new SolverTile((i * size) + j, size);
+                testGrid[i][j] = new SolverTile((i * size) + j + 1, size);
             }
         }
     }
@@ -43,27 +43,45 @@ public class Solver {
     // Checks the columns to eliminate possible values.
     public void checkColumns() {
         // Gets every column.
-        for (int i = 1; i <= size; i++) {
+        for (int i = 0; i < size; i++) {
             SolverTile[] column = new SolverTile[size];
 
             // Creates a column.
+            int count = 0;
             for (SolverTile[] row : testGrid) {
                 for (SolverTile rowTile : row) {
-                    if (rowTile.getGridPosition() % size == i) {
-                        column[column.length - 1] = rowTile;
+                    if ((rowTile.getGridPosition() - 1) % size == i) {
+                        column[count] = rowTile;
+                        count++;
                     }
                 }
             }
 
-            // Gets every tile in the column
-            for (SolverTile columnTile1 : column) {
-                //Checks the tile if it has a final value.
-                if (columnTile1.getFinalValue() == i) {
-                    // Removes that possible value from the tiles in the column.
-                    for (SolverTile columnTile2 : column) {
-                        columnTile2.removePossible(i);
+            // Checks every possible final value.
+            for (int j = 1; j <= size; j ++) {
+                // Gets every tile in the column
+                for (SolverTile columnTile1 : column) {
+                    //Checks the tile if it has a final value.
+                    if (columnTile1.getFinalValue() == j) {
+                        // Removes that possible value from the tiles in the column.
+                        for (SolverTile columnTile2 : column) {
+                            columnTile2.removePossible(j);
+                        }
+                        break;
                     }
-                    break;
+                }
+            }
+        }
+    }
+
+    // Checks for a tile that has only one possible value.
+    public void findFinals() {
+        // Gets every tile in the grid.
+        for (SolverTile[] row : testGrid) {
+            for (SolverTile tile : row) {
+                // Checks if tile can be made final.
+                if (tile.numberPossibles() == 1) {
+                    tile.setFinalValue();
                 }
             }
         }
@@ -78,6 +96,11 @@ public class Solver {
                 testGrid[singleTile.getRow()][singleTile.getColumn()].setFinalValue(cage.getResult());
             }
         }
+
+        // Checks rows and columns once initially.
+        checkRows();
+        checkColumns();
+        findFinals();
 
         // Returns the solved grid.
         return testGrid;
