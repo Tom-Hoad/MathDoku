@@ -17,12 +17,9 @@ public class SolverTile {
 
     // Removes a possible value.
     public void removePossible(int value) {
-        possibleValues.remove((Integer) value);
-    }
-
-    // Checks if there only one possible value.
-    public boolean isFinal() {
-        return possibleValues.size() == 1;
+        if (possibleValues.contains(value)) {
+            possibleValues.remove((Integer) value);
+        }
     }
 
     // Sets the final value.
@@ -33,5 +30,10 @@ public class SolverTile {
     // Gets the final value.
     public int getFinalValue() {
         return finalValue;
+    }
+
+    // Gets the grid position.
+    public int getGridPosition() {
+        return gridPosition;
     }
 }
