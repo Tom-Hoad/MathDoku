@@ -75,11 +75,19 @@ public class Grid extends GridPane {
 
         try {
             for (String textCage : splitCages) {
-                // Gets the result and operation.
+                // Gets the cage definition.
                 int cageSplit = textCage.indexOf(" ");
-                String strResult = textCage.substring(0, cageSplit - 1);
-                String operation = textCage.substring(cageSplit - 1, cageSplit);
+                String strResult;
+                String operation = "single";
                 String cageDefinition = textCage.substring(cageSplit + 1);
+
+                // Reads the result and operation.
+                if (!Character.isDigit(textCage.charAt(cageSplit - 1))) {
+                    strResult = textCage.substring(0, cageSplit - 1);
+                    operation = textCage.substring(cageSplit - 1, cageSplit);
+                } else {
+                    strResult = textCage.substring(0, cageSplit);
+                }
 
                 // Checks if the cage has been entered correctly.
                 int result = Integer.parseInt(strResult);
@@ -160,7 +168,7 @@ public class Grid extends GridPane {
         // Check if single cages.
         for (Cage cage : cages) {
             if (cage.getCageTiles().size() == 1) {
-                if (cage.getResult() > 6) {
+                if (cage.getResult() > size) {
                     throw new Exception();
                 }
             }
@@ -289,7 +297,7 @@ public class Grid extends GridPane {
 
     // Checks if the operation is correct.
     public void checkOperation(String operation) throws Exception {
-        if (!operation.equals("+") && !operation.equals("*") && !operation.equals("x") && !operation.equals("-") && !operation.equals("/") && !operation.equals("÷")) {
+        if (!operation.equals("single") && !operation.equals("+") && !operation.equals("*") && !operation.equals("x") && !operation.equals("-") && !operation.equals("/") && !operation.equals("÷")) {
             throw new Exception();
         }
     }

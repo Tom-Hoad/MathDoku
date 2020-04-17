@@ -48,7 +48,13 @@ public class Cage {
         } catch (Exception ignored) {}
 
         // Displays the cage requirement.
-        Label label = new Label(result + operation);
+        Label label = new Label();
+        if (operation.equals("single")) {
+            label.setText(String.valueOf(result));
+        } else {
+            label.setText(result + operation);
+        }
+
         label.setFont(new Font(fontSize));
         firstTile.getChildren().add(1, label);
         StackPane.setAlignment(firstTile.getChildren().get(1), Pos.TOP_LEFT);

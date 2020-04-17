@@ -101,7 +101,7 @@ public class Solver {
             }
         }
 
-        // Eliminates possibilities until it cannot.
+        // Eliminates possibilities until there are no more certain possibilities.
         do {
             checkRows();
             checkColumns();
