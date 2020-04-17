@@ -29,11 +29,12 @@ public class Cage {
 
         // Adds borders to the sides of tiles not adjacent to the cage.
         for (Tile cageTile : cageTiles) {
-            String tileStyle = "-fx-border-width: " +
-                    findAdjacent(false, cageTile.getGridPosition() - grid.getSize()) +
-                    findAdjacent(false, cageTile.getGridPosition() + 1) +
-                    findAdjacent(false, cageTile.getGridPosition() + grid.getSize()) +
-                    findAdjacent(false, cageTile.getGridPosition() - 1);
+            String topBorder = findAdjacent(false, cageTile, - grid.getSize());
+            String rightBorder = findAdjacent(false, cageTile, 1);
+            String bottomBorder = findAdjacent(false, cageTile, grid.getSize());
+            String leftBorder = findAdjacent(false, cageTile, - 1);
+
+            String tileStyle = "-fx-border-width: " + topBorder + rightBorder + bottomBorder + leftBorder;
             cageTile.addBorder(tileStyle);
         }
     }
@@ -61,9 +62,14 @@ public class Cage {
     }
 
     // Checks if there is an adjacent tile.
-    public String findAdjacent(boolean found, int positionAdjacent) {
+    public String findAdjacent(boolean found, Tile cageTile, int proximity) {
+        // Finds the adjacent tile.
         for (Tile adjacentTile : cageTiles) {
-            if (adjacentTile.getGridPosition() == positionAdjacent) {
+            if (adjacentTile.getGridPosition() == cageTile.getGridPosition() + proximity) {
+                // Checks if the cage overflow onto the next row.
+                if (cageTile.getRow() != adjacentTile.getRow() && (proximity == 1 || proximity == - 1)) {
+                    break;
+                }
                 found = true;
                 break;
             }
