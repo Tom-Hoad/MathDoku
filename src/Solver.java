@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Solver {
@@ -89,6 +90,22 @@ public class Solver {
             }
         }
         return update;
+    }
+
+    // Finds possible value pairs for adding cages.
+    public ArrayList<int[]> findAddPairs(int result, int[] possibleValues) {
+        ArrayList<int[]> newPossibles = new ArrayList<>();
+        int count = 0;
+
+        for (int i = 0; i < possibleValues.length; i++) {
+            for (int j = i + 1; j < possibleValues.length; j++) {
+                if (possibleValues[i] + possibleValues[j] == result) {
+                    newPossibles.add(count, new int[]{possibleValues[i], possibleValues[j]});
+                    count++;
+                }
+            }
+        }
+        return newPossibles;
     }
 
     // Responds for a call to solve the grid.

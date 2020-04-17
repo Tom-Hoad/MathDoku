@@ -18,16 +18,16 @@ public class Grid extends GridPane {
     private int size;
     private int tileFontSize;
     private int cageFontSize;
-    private GridPane mainPane;
-    private HBox buttonHBox;
+    private final GridPane mainPane;
+    private final HBox buttonHBox;
     private ArrayList<Row> rows;
     private ArrayList<Column> columns;
     private ArrayList<Cage> cages;
     private ArrayList<Tile> tiles;
     private Tile selectedTile;
-    private CheckMistake checkMistake;
-    private History history;
-    private Solver solver;
+    private final CheckMistake checkMistake;
+    private final History history;
+    private final Solver solver;
 
     // The grid class constructor.
     public Grid(GridPane mainPane, HBox buttonHBox, History history) {
@@ -332,6 +332,16 @@ public class Grid extends GridPane {
         return tiles;
     }
 
+    // Gets a tile from the grid.
+    public Tile getTile(int gridPosition) {
+        for (Tile tile : getTiles()) {
+            if (tile.getGridPosition() == gridPosition) {
+                return tile;
+            }
+        }
+        return null;
+    }
+
     // Gets the mistake checking class.
     public CheckMistake getCheckMistake() {
         return checkMistake;
@@ -404,7 +414,8 @@ public class Grid extends GridPane {
                 int columnCount = 0;
                 for (SolverTile columnTile : row) {
                     if (columnTile.getFinalValue() != 0) {
-                        getTiles().get((rowCount * size) + columnCount).displayNumber(columnTile.getFinalValue());
+                        int position = (rowCount * size) + columnCount + 1;
+                        getTile(position).displayNumber(columnTile.getFinalValue());
                     }
                     columnCount++;
                 }
