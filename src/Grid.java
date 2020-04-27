@@ -421,7 +421,7 @@ public class Grid extends GridPane {
                 }
                 rowCount++;
             }
+            checkMistake.shouldCheck();
         }
-        checkMistake.shouldCheck();
     }
 }
